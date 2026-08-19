@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Facturación Profesional</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Barra de Navegación -->
+    <nav class="navbar">
+        <div class="logo">
+            <!-- Acá irá tu logo final -->
+            <span class="logo-text">FacturApp</span> 
+        </div>
+        <div class="nav-links">
+            <a href="#">Iniciar Sesión</a>
+            <a href="#" class="btn-registro">Registrarse</a>
+            <a href="#" style="display: none;">Salir</a> <!-- Oculto hasta que haya sesión real -->
+        </div>
+    </nav>
+
+    <!-- Sección Principal con Imagen -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Facturación simple para el equipo interdisciplinario</h1>
+            <p>Agilizá la carga de tus prestaciones, consultá los nomencladores de discapacidad actualizados y enviá tus planillas a las Obras Sociales en un par de clics.</p>
+            
+            <!-- Dejamos solo UNO de ARCA -->
+            <a href="https://auth.afip.gob.ar/contribuyente_/login.xhtml" target="_blank" style="text-decoration: none;">
+                <button class="btn-principal">Ingresar a ARCA (Factura C)</button>
+            </a>
+            
+            <!-- Y el botón del instructivo -->
+            <a href="instructivo.html" style="text-decoration: none; margin-left: 15px;">
+                <button class="btn-secundario">Ver Instructivo</button>
+            </a>
+        </div>
+        <div class="hero-image">
+            <!-- Imagen de una terapeuta trabajando con un niño a través del juego -->
+            <img src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=600&q=80" alt="Sesión de psicopedagogía infantil">
+        </div>
+    </header>
+
+    <hr class="separador">
+
+    <!-- Sección de Nomencladores y Envíos (Simulando vista post-login) -->
+    <section class="panel-control">
+        <h2>Panel de Nomencladores</h2>
+        <p>Valores actualizados al mes en curso.</p>
+        
+        <div class="tarjetas-nomencladores">
+            <div class="tarjeta-valor">
+                <h3>Valor OSDE</h3>
+                <p class="precio">$ 13.559,00</p>
+                <span class="etiqueta-dinamica">Actualización automática pendiente...</span>
+            </div>
+            
+            <div class="tarjeta-valor">
+                <h3>Otro Nomenclador</h3>
+                <p class="precio">$ 20.127,95</p>
+                <span class="etiqueta-dinamica">Actualización automática pendiente...</span>
+            </div>
+        </div>
+
+        <div class="seccion-envio">
+            <h3>Paso 2: Enviar Planillas</h3>
+            <p>Seleccioná la Obra Social para adjuntar tu factura y enviar:</p>
+            <select class="selector-obras">
+                <option value="">-- Elegir Obra Social --</option>
+                <option value="osde">OSDE</option>
+                <option value="osdepym">OSDEPYM</option>
+                <option value="sancor">Sancor Salud</option>
+            </select>
+            <button class="btn-secundario">Redactar Correo</button>
+        </div>
+    </section>
+
+</body>
+</html>

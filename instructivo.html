@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructivo de Facturación</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos extra solo para el instructivo */
+        .contenedor-tutorial {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .paso {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        .paso h3 {
+            color: #1d1d1f;
+            font-size: 20px;
+        }
+        .paso p {
+            color: #555;
+            line-height: 1.6;
+        }
+        .imagen-paso {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #eaeaea;
+            margin-top: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .btn-volver {
+            display: inline-block;
+            margin-top: 20px;
+            color: #555;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .btn-volver:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-text">FacturApp</span> 
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Volver al Inicio</a>
+        </div>
+    </nav>
+
+    <div class="contenedor-tutorial">
+        <h2>Cómo emitir tu Factura C</h2>
+        <p>Seguí este paso a paso para facturar tus prestaciones correctamente en el portal de ARCA.</p>
+
+        <div class="paso">
+            <h3>Paso 1: Ingreso al sistema</h3>
+            <p>Ingresá tu número de CUIT y posteriormente tu Clave Fiscal para acceder al portal.</p>
+            <!-- Reemplazá 'paso1.jpg' por el nombre de tu imagen ya censurada -->
+            <img src="paso1.jfif" alt="Ingreso CUIT" class="imagen-paso">
+        </div>
+
+        <div class="paso">
+            <h3>Paso 2: Comprobantes en línea</h3>
+            <p>Dentro de los servicios más utilizados, seleccioná la opción <strong>"Comprobantes en línea"</strong> y luego hacé clic en tu nombre (la empresa a representar).</p>
+            <img src="paso2.png" alt="Comprobantes en línea" class="imagen-paso">
+        </div>
+
+        <div class="paso">
+            <h3>Paso 3: Generar Comprobante</h3>
+            <p>En el menú principal del régimen de comprobantes, seleccioná <strong>"Generar Comprobantes"</strong>. Luego, elegí tu punto de venta habitual y en Tipo de Comprobante seleccioná <strong>"Factura C"</strong>.</p>
+            <img src="paso3.png" alt="Generar comprobante" class="imagen-paso">
+        </div>
+
+        <div class="paso">
+            <h3>Paso 4: Conceptos y Fechas</h3>
+            <p>En Conceptos a incluir, elegí <strong>"Productos y Servicios"</strong> (o lo que corresponda a tu prestación). Determiná el rango de fechas del período facturado y la fecha de vencimiento para el pago.</p>
+            <img src="paso4.jfif" alt="Fechas y conceptos" class="imagen-paso">
+        </div>
+
+        <div class="paso">
+            <h3>Paso 5: Datos del Receptor</h3>
+            <p>Completá los datos de la Obra Social o paciente: Condición frente al IVA, CUIT y marcá la condición de venta (por ejemplo, Cuenta Corriente).</p>
+            <img src="paso5.jfif" alt="Datos del receptor" class="imagen-paso">
+        </div>
+
+        <div class="paso">
+            <h3>Paso 6: Detalle de la Operación</h3>
+            <p>Ingresá la descripción exacta de la prestación brindada, la unidad de medida, la cantidad y el precio unitario del nomenclador. Finalmente, confirmá los datos para imprimir o descargar el PDF.</p>
+            <img src="paso6.png" alt="Detalle final" class="imagen-paso">
+        </div>
+
+        <!-- Sección de Video -->
+        <div class="alerta-video">
+            <h3>¿Te quedó alguna duda?</h3>
+            <p>Si preferís ver el proceso en acción, te compartimos un tutorial detallado con el paso a paso.</p>
+            <a href="https://www.youtube.com/watch?v=G_13ix-I18k" target="_blank" class="btn-secundario">
+                Ver video en YouTube ▶
+            </a>
+        </div>
+
+        <a href="index.html" class="btn-volver">← Volver al Panel Principal</a>
+    </div>
+
+</body>
+</html>

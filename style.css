@@ -1,0 +1,199 @@
+/* Configuraciones generales - Minimalista */
+body {
+    /* Fuentes limpias y modernas */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #ffffff; /* Fondo blanco puro */
+    color: #1d1d1f; /* Gris casi negro, cansa menos la vista */
+    margin: 0;
+    padding: 0;
+}
+
+/* Barra de Navegación */
+.navbar {
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eaeaea; /* Línea separadora muy sutil */
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #555;
+    margin-left: 30px;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    color: #000;
+}
+
+.btn-registro {
+    border: 1px solid #1d1d1f;
+    padding: 8px 18px;
+    border-radius: 20px; /* Bordes redondeados elegantes */
+}
+
+/* Sección Principal (Hero) */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 80px 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-content {
+    max-width: 45%;
+}
+
+.hero-content h1 {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 18px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 40px;
+}
+
+.hero-image img {
+    max-width: 100%;
+    border-radius: 8px; /* Bordes apenas redondeados */
+    filter: grayscale(15%); /* Apaga un poco los colores para no romper el minimalismo */
+}
+
+/* Botones */
+.btn-principal {
+    background-color: #1d1d1f; /* Negro minimalista */
+    color: #ffffff;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-principal:hover {
+    opacity: 0.8;
+}
+
+/* Panel de Control */
+.panel-control {
+    padding: 60px 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.panel-control h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.panel-control p {
+    color: #777;
+    margin-bottom: 40px;
+}
+
+.tarjetas-nomencladores {
+    display: flex;
+    gap: 24px;
+}
+
+.tarjeta-valor {
+    background-color: #fafafa; /* Gris ultra claro */
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #eaeaea;
+    flex: 1;
+}
+
+.tarjeta-valor h3 {
+    margin: 0;
+    font-size: 14px;
+    color: #777;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.precio {
+    font-size: 40px;
+    font-weight: 300; /* Letra fina y elegante */
+    letter-spacing: -1px;
+    color: #1d1d1f;
+    margin: 15px 0;
+}
+
+.etiqueta-dinamica {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Sección Envío */
+.seccion-envio {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #eaeaea;
+}
+
+.selector-obras {
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-right: 15px;
+    width: 300px;
+    background-color: #fff;
+}
+
+.btn-secundario {
+    background-color: #fff;
+    color: #1d1d1f;
+    padding: 12px 24px;
+    border: 1px solid #1d1d1f;
+    border-radius: 30px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-secundario:hover {
+    background-color: #1d1d1f;
+    color: #fff;
+}
+
+.separador {
+    display: none; /* Lo ocultamos para mantenerlo más limpio */
+}
+
+/* Sección de Video en Instructivo */
+.alerta-video {
+    background-color: #fafafa;
+    border-left: 4px solid #1d1d1f;
+    padding: 25px;
+    margin: 40px 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.alerta-video h3 {
+    margin-top: 0;
+    color: #1d1d1f;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
