@@ -11,13 +11,12 @@
     <!-- Barra de Navegación -->
     <nav class="navbar">
         <div class="logo">
-            <!-- Acá irá tu logo final -->
             <span class="logo-text">FacturApp</span> 
         </div>
         <div class="nav-links">
             <a href="#">Iniciar Sesión</a>
             <a href="#" class="btn-registro">Registrarse</a>
-            <a href="#" style="display: none;">Salir</a> <!-- Oculto hasta que haya sesión real -->
+            <a href="#" style="display: none;">Salir</a>
         </div>
     </nav>
 
@@ -27,25 +26,22 @@
             <h1>Facturación simple para el equipo interdisciplinario</h1>
             <p>Agilizá la carga de tus prestaciones, consultá los nomencladores de discapacidad actualizados y enviá tus planillas a las Obras Sociales en un par de clics.</p>
             
-            <!-- Dejamos solo UNO de ARCA -->
             <a href="https://auth.afip.gob.ar/contribuyente_/login.xhtml" target="_blank" style="text-decoration: none;">
                 <button class="btn-principal">Ingresar a ARCA (Factura C)</button>
             </a>
             
-            <!-- Y el botón del instructivo -->
             <a href="instructivo.html" style="text-decoration: none; margin-left: 15px;">
                 <button class="btn-secundario">Ver Instructivo</button>
             </a>
         </div>
         <div class="hero-image">
-            <!-- Imagen de una terapeuta trabajando con un niño a través del juego -->
             <img src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=600&q=80" alt="Sesión de psicopedagogía infantil">
         </div>
     </header>
 
     <hr class="separador">
 
-    <!-- Sección de Nomencladores y Envíos (Simulando vista post-login) -->
+    <!-- Sección de Nomencladores y Envíos -->
     <section class="panel-control">
         <h2>Panel de Nomencladores</h2>
         <p>Valores actualizados al mes en curso.</p>
@@ -65,17 +61,126 @@
         </div>
 
         <div class="seccion-envio">
-            <h3>Paso 2: Enviar Planillas</h3>
-            <p>Seleccioná la Obra Social para adjuntar tu factura y enviar:</p>
-            <select class="selector-obras">
-                <option value="">-- Elegir Obra Social --</option>
-                <option value="osde">OSDE</option>
-                <option value="osdepym">OSDEPYM</option>
-                <option value="sancor">Sancor Salud</option>
+            <h3>Paso 2: Generar Detalle para Factura</h3>
+            <p>Seleccioná al paciente para autocompletar los datos:</p>
+            
+            <select id="selectorPacientes" class="selector-obras">
+                <option value="">-- Seleccionar Paciente --</option>
             </select>
+            
+            <div id="resultadoDetalle" style="margin-top: 20px; background: #fafafa; padding: 15px; border-radius: 8px; border: 1px solid #eaeaea; display: none;">
+                <p><strong>Obra Social:</strong> <span id="txtObraSocial"></span></p>
+                <p><strong>CUIT:</strong> <span id="txtCuit"></span></p>
+                <p><strong>Detalle para la factura:</strong></p>
+                <p id="txtPlantilla" style="font-family: monospace; background: #fff; padding: 10px; border: 1px solid #ddd;"></p>
+            </div>
+            
+            <br><br>
             <button class="btn-secundario">Redactar Correo</button>
         </div>
     </section>
+
+    <!-- Base de datos y Lógica JavaScript -->
+    <script>
+        const pacientesCarolina = [
+            {
+                nombre: "Yago Carnip Mandra",
+                dni: "46.871.612",
+                afiliado: "60929068103",
+                obraSocial: "OSDE",
+                cuit: "30546741253",
+                textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46 871 612, AF N°: 60929068103 PERIODO: [MES] 2026 Valor según nomenclador OSDE."
+            },
+            {
+                nombre: "Joaquin Santana",
+                dni: "54.702.333",
+                afiliado: "615682214503",
+                obraSocial: "OSDE",
+                cuit: "30546741253",
+                textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Joaquin Santana DNI: 54.702.333, AF N°: 615682214503 PERIODO: [MES] 2026 Valor según Nomenclador OSDE."
+            },
+            {
+                nombre: "Homero Giles",
+                dni: "56.076.850",
+                afiliado: "1-56076850",
+                obraSocial: "SANTILLAN ROBERTO LOMBARDO",
+                cuit: "20169260630",
+                textoBase: "Honorarios Profesionales por la presentación de psicopedagogía al niño: Homero Giles DNI: 56076850 AF N°: 1-56076850 PERIODO: [MES] 2026 valor según nomenclador Nac. Res. Conjunta 2024"
+            },
+            {
+                nombre: "Luna Bautista Mujis",
+                dni: "56.629.620",
+                afiliado: "4 340196 01 01 9",
+                obraSocial: "OMINT SOCIEDAD ANONIMA DE SERVICIOS",
+                cuit: "30550245309",
+                textoBase: "Honorarios profesionales por la prestación de psicopedagogía al niño: Luna Bautista Mujis DNI: 56.629.620 AF: 4 340196 01 01 9 Período: [MES] 2026 Según resolución conjunta 8."
+            },
+            {
+                nombre: "Noah Telechea",
+                dni: "No especificado",
+                afiliado: "56948636",
+                obraSocial: "OBRA SOCIAL DE LOS EMPLEADOS DE COMERCIO Y ACTIVIDADES CIVILES",
+                cuit: "30550273558",
+                textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: NOAH TELECHEA, AFILIADO 56948636 PERÍODO: [MES] 2026 Resolución Conjunta 9/2024."
+            },
+            {
+                nombre: "Ignacio Ferro Junco",
+                dni: "51.337.834",
+                afiliado: "20-307223016/02",
+                obraSocial: "OBRA SOCIAL DE TECNICOS DE VUELO DE LINEAS AEREAS",
+                cuit: "30624957942",
+                textoBase: "Honorarios Profesionales por la presentación de psicopedagogia al niño: Ignacio Ferro Junco DNI: 51.337.834 A.F.: 20-307223016/02 PERIODO: [MES] 2026 Valor según nomenclador Nac. Res. Conjunta 8/2022."
+            },
+            {
+                nombre: "Gonzalo Pineda",
+                dni: "55.181.937",
+                afiliado: "No especificado",
+                obraSocial: "GALENO ARGENTINA SOCIEDAD ANONIMA",
+                cuit: "30522428163",
+                textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: Gonzalo Pineda DNI: 55181937 PERIODO: [MES] 2026 valor según nomenclador Nac. Res. Conjunta 8/2022"
+            },
+            {
+                nombre: "Alma Sesto",
+                dni: "53.288.131",
+                afiliado: "No especificado",
+                obraSocial: "MEDICUS SOCIEDAD ANONIMA DE ASISTENCIA MEDICA Y CIENTIFICA",
+                cuit: "30546771314",
+                textoBase: "Honorarios profesionales de psicopedagogía, beneficiaria Alma Sesto. DNI: 53.288.131 Período: [MES] 2026"
+            }
+        ];
+
+        // Lógica para que el menú interactúe en la pantalla
+        const select = document.getElementById("selectorPacientes");
+        const panelResultado = document.getElementById("resultadoDetalle");
+        const txtObraSocial = document.getElementById("txtObraSocial");
+        const txtCuit = document.getElementById("txtCuit");
+        const txtPlantilla = document.getElementById("txtPlantilla");
+
+        pacientesCarolina.forEach((paciente, index) => {
+            let option = document.createElement("option");
+            option.value = index;
+            option.textContent = `${paciente.nombre} (${paciente.obraSocial})`;
+            select.appendChild(option);
+        });
+
+        select.addEventListener("change", (e) => {
+            const index = e.target.value;
+            if (index === "") {
+                panelResultado.style.display = "none";
+                return;
+            }
+
+            const p = pacientesCarolina[index];
+            txtObraSocial.textContent = p.obraSocial;
+            txtCuit.textContent = p.cuit;
+            
+            // Reemplazamos [MES] por un mes de prueba
+            let textoFinal = p.textoBase.replace("[MES]", "JULIO");
+            txtPlantilla.textContent = textoFinal;
+
+            panelResultado.style.display = "block";
+        });
+    </script>
 
 </body>
 </html>
