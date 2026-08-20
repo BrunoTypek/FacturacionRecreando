@@ -87,16 +87,22 @@
                 nombre: "Yago Carnip Mandra",
                 dni: "46.871.612",
                 afiliado: "60929068103",
-                obraSocial: "OSDE",
+                obraSocial: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS",
                 cuit: "30546741253",
+                iva: "IVA Responsable Inscripto",
+                condicionVenta: "Cuenta Corriente",
+                domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires",
                 textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46 871 612, AF N°: 60929068103 PERIODO: [MES] 2026 Valor según nomenclador OSDE."
             },
             {
                 nombre: "Joaquin Santana",
                 dni: "54.702.333",
                 afiliado: "615682214503",
-                obraSocial: "OSDE",
+                obraSocial: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS",
                 cuit: "30546741253",
+                iva: "IVA Responsable Inscripto",
+                condicionVenta: "Cuenta Corriente",
+                domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires",
                 textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Joaquin Santana DNI: 54.702.333, AF N°: 615682214503 PERIODO: [MES] 2026 Valor según Nomenclador OSDE."
             },
             {
@@ -105,6 +111,9 @@
                 afiliado: "1-56076850",
                 obraSocial: "SANTILLAN ROBERTO LOMBARDO",
                 cuit: "20169260630",
+                iva: "Consumidor Final",
+                condicionVenta: "Otra",
+                domicilio: "Cavia 545",
                 textoBase: "Honorarios Profesionales por la presentación de psicopedagogía al niño: Homero Giles DNI: 56076850 AF N°: 1-56076850 PERIODO: [MES] 2026 valor según nomenclador Nac. Res. Conjunta 2024"
             },
             {
@@ -113,6 +122,9 @@
                 afiliado: "4 340196 01 01 9",
                 obraSocial: "OMINT SOCIEDAD ANONIMA DE SERVICIOS",
                 cuit: "30550245309",
+                iva: "IVA Responsable Inscripto",
+                condicionVenta: "Otra",
+                domicilio: "Carlos Pellegrini 1363 Piso:9 - Capital Federal, Buenos Aires",
                 textoBase: "Honorarios profesionales por la prestación de psicopedagogía al niño: Luna Bautista Mujis DNI: 56.629.620 AF: 4 340196 01 01 9 Período: [MES] 2026 Según resolución conjunta 8."
             },
             {
@@ -121,6 +133,9 @@
                 afiliado: "56948636",
                 obraSocial: "OBRA SOCIAL DE LOS EMPLEADOS DE COMERCIO Y ACTIVIDADES CIVILES",
                 cuit: "30550273558",
+                iva: "IVA Sujeto Exento",
+                condicionVenta: "Cuenta Corriente",
+                domicilio: "Moreno 648 - Capital Federal, Buenos Aires",
                 textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: NOAH TELECHEA, AFILIADO 56948636 PERÍODO: [MES] 2026 Resolución Conjunta 9/2024."
             },
             {
@@ -129,6 +144,9 @@
                 afiliado: "20-307223016/02",
                 obraSocial: "OBRA SOCIAL DE TECNICOS DE VUELO DE LINEAS AEREAS",
                 cuit: "30624957942",
+                iva: "IVA Sujeto Exento",
+                condicionVenta: "Otra",
+                domicilio: "Víctor Hugo 369 - Capital Federal, Buenos Aires",
                 textoBase: "Honorarios Profesionales por la presentación de psicopedagogia al niño: Ignacio Ferro Junco DNI: 51.337.834 A.F.: 20-307223016/02 PERIODO: [MES] 2026 Valor según nomenclador Nac. Res. Conjunta 8/2022."
             },
             {
@@ -137,6 +155,9 @@
                 afiliado: "No especificado",
                 obraSocial: "GALENO ARGENTINA SOCIEDAD ANONIMA",
                 cuit: "30522428163",
+                iva: "IVA Responsable Inscripto",
+                condicionVenta: "Otra",
+                domicilio: "Elvira Rawson de Dellepiane 150 - Capital Federal, Buenos Aires",
                 textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: Gonzalo Pineda DNI: 55181937 PERIODO: [MES] 2026 valor según nomenclador Nac. Res. Conjunta 8/2022"
             },
             {
@@ -145,16 +166,32 @@
                 afiliado: "No especificado",
                 obraSocial: "MEDICUS SOCIEDAD ANONIMA DE ASISTENCIA MEDICA Y CIENTIFICA",
                 cuit: "30546771314",
+                iva: "IVA Responsable Inscripto",
+                condicionVenta: "Otra",
+                domicilio: "Larrea 877 Piso:06 - Capital Federal, Buenos Aires",
                 textoBase: "Honorarios profesionales de psicopedagogía, beneficiaria Alma Sesto. DNI: 53.288.131 Período: [MES] 2026"
             }
         ];
 
-        // Lógica para que el menú interactúe en la pantalla
+        // Lógica visual para mostrar todos estos datos en pantalla
         const select = document.getElementById("selectorPacientes");
         const panelResultado = document.getElementById("resultadoDetalle");
         const txtObraSocial = document.getElementById("txtObraSocial");
         const txtCuit = document.getElementById("txtCuit");
         const txtPlantilla = document.getElementById("txtPlantilla");
+
+        // Creamos los campos extras en el HTML si no están creados
+        if (!document.getElementById("txtIva")) {
+            panelResultado.innerHTML += `
+                <p><strong>Condición IVA:</strong> <span id="txtIva"></span></p>
+                <p><strong>Condición de Venta:</strong> <span id="txtVenta"></span></p>
+                <p><strong>Domicilio:</strong> <span id="txtDomicilio"></span></p>
+            `;
+        }
+
+        const txtIva = document.getElementById("txtIva");
+        const txtVenta = document.getElementById("txtVenta");
+        const txtDomicilio = document.getElementById("txtDomicilio");
 
         pacientesCarolina.forEach((paciente, index) => {
             let option = document.createElement("option");
@@ -173,8 +210,10 @@
             const p = pacientesCarolina[index];
             txtObraSocial.textContent = p.obraSocial;
             txtCuit.textContent = p.cuit;
+            txtIva.textContent = p.iva;
+            txtVenta.textContent = p.condicionVenta;
+            txtDomicilio.textContent = p.domicilio;
             
-            // Reemplazamos [MES] por un mes de prueba
             let textoFinal = p.textoBase.replace("[MES]", "JULIO");
             txtPlantilla.textContent = textoFinal;
 
