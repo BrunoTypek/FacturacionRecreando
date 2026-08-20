@@ -68,11 +68,15 @@
                 <option value="">-- Seleccionar Paciente --</option>
             </select>
             
-            <div id="resultadoDetalle" style="margin-top: 20px; background: #fafafa; padding: 15px; border-radius: 8px; border: 1px solid #eaeaea; display: none;">
+            <div id="resultadoDetalle" style="margin-top: 20px; background: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #eaeaea; display: none;">
                 <p><strong>Obra Social:</strong> <span id="txtObraSocial"></span></p>
                 <p><strong>CUIT:</strong> <span id="txtCuit"></span></p>
+                <p><strong>Condición IVA:</strong> <span id="txtIva"></span></p>
+                <p><strong>Condición de Venta:</strong> <span id="txtVenta"></span></p>
+                <p><strong>Domicilio:</strong> <span id="txtDomicilio"></span></p>
+                <br>
                 <p><strong>Detalle para la factura:</strong></p>
-                <p id="txtPlantilla" style="font-family: monospace; background: #fff; padding: 10px; border: 1px solid #ddd;"></p>
+                <p id="txtPlantilla" style="font-family: monospace; background: #fff; padding: 12px; border: 1px solid #ddd; border-radius: 6px; white-space: pre-wrap;"></p>
             </div>
             
             <br><br>
@@ -173,26 +177,16 @@
             }
         ];
 
-        // Lógica visual para mostrar todos estos datos en pantalla
         const select = document.getElementById("selectorPacientes");
         const panelResultado = document.getElementById("resultadoDetalle");
         const txtObraSocial = document.getElementById("txtObraSocial");
         const txtCuit = document.getElementById("txtCuit");
-        const txtPlantilla = document.getElementById("txtPlantilla");
-
-        // Creamos los campos extras en el HTML si no están creados
-        if (!document.getElementById("txtIva")) {
-            panelResultado.innerHTML += `
-                <p><strong>Condición IVA:</strong> <span id="txtIva"></span></p>
-                <p><strong>Condición de Venta:</strong> <span id="txtVenta"></span></p>
-                <p><strong>Domicilio:</strong> <span id="txtDomicilio"></span></p>
-            `;
-        }
-
         const txtIva = document.getElementById("txtIva");
         const txtVenta = document.getElementById("txtVenta");
         const txtDomicilio = document.getElementById("txtDomicilio");
+        const txtPlantilla = document.getElementById("txtPlantilla");
 
+        // Llenar el select con los pacientes
         pacientesCarolina.forEach((paciente, index) => {
             let option = document.createElement("option");
             option.value = index;
@@ -200,6 +194,7 @@
             select.appendChild(option);
         });
 
+        // Evento al cambiar de paciente
         select.addEventListener("change", (e) => {
             const index = e.target.value;
             if (index === "") {
