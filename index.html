@@ -8,128 +8,155 @@
 </head>
 <body>
 
-    <!-- Barra de Navegación con Perfil Activo -->
+    <!-- Barra de Navegación -->
     <nav class="navbar">
         <div class="logo">
             <span class="logo-text">FacturApp</span> 
         </div>
-        <div class="nav-links" style="display: flex; align-items: center; gap: 15px;">
-            <span style="font-size: 14px; color: #333; font-weight: 500;">👤 Lic. Carolina Noelia Giménez (M.P. 104.339)</span>
-            <a href="#" style="font-size: 14px; color: #d9534f; text-decoration: none;">Salir</a>
+        <div class="nav-links">
+            <!-- Esto cambia dinámicamente según si hay sesión iniciada -->
+            <span id="infoUsuario" style="font-size: 14px; color: #333; font-weight: 500; display: none;">👤 <span id="nombreProfesional"></span></span>
+            <a href="#" id="btnCerrarSesion" style="font-size: 14px; color: #d9534f; text-decoration: none; display: none; margin-left: 15px;">Salir</a>
         </div>
     </nav>
 
-    <!-- Sección Principal con Imagen -->
-    <header class="hero">
-        <div class="hero-content">
-            <h1>Facturación simple para el equipo interdisciplinario</h1>
-            <p>Agilizá la carga de tus prestaciones, consultá los nomencladores de discapacidad actualizados y enviá tus planillas a las Obras Sociales en un par de clics.</p>
-            
-            <a href="https://auth.afip.gob.ar/contribuyente_/login.xhtml" target="_blank" style="text-decoration: none;">
-                <button class="btn-principal">Ingresar a ARCA (Factura C)</button>
-            </a>
-            
-            <a href="instructivo.html" style="text-decoration: none; margin-left: 15px;">
-                <button class="btn-secundario">Ver Instructivo</button>
-            </a>
-        </div>
-        <div class="hero-image">
-            <img src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=600&q=80" alt="Sesión de psicopedagogía infantil">
-        </div>
-    </header>
-
-    <hr class="separador">
-
-    <!-- Sección de Nomencladores y Envíos -->
-    <section class="panel-control">
-        <h2>Panel de Nomencladores</h2>
-        <p>Valores actualizados al mes en curso.</p>
+    <!-- PANTALLA DE LOGIN (Se muestra por defecto al entrar) -->
+    <div id="pantallaLogin" style="max-width: 400px; margin: 80px auto; padding: 30px; background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;">
+        <h2>Iniciar Sesión</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Ingresá tus credenciales para acceder a tu panel de facturación.</p>
         
-        <div class="tarjetas-nomencladores">
-            <div class="tarjeta-valor">
-                <h3>Valor OSDE</h3>
-                <p class="precio">$ 13.559,00</p>
-                <span class="etiqueta-dinamica">Actualización automática pendiente...</span>
-            </div>
-            
-            <div class="tarjeta-valor">
-                <h3>Otro Nomenclador</h3>
-                <p class="precio">$ 20.127,95</p>
-                <span class="etiqueta-dinamica">Actualización automática pendiente...</span>
-            </div>
+        <div style="text-align: left; margin-bottom: 15px;">
+            <label style="font-size: 13px; font-weight: 600;">Seleccionar Profesional:</label>
+            <select id="inputUsuario" class="selector-obras" style="width: 100%; margin-top: 5px;">
+                <option value="carolina">Lic. Carolina Noelia Giménez</option>
+                <!-- Acá irán los otros 4 profesionales en el futuro -->
+            </select>
         </div>
 
-        <div class="seccion-envio">
-            <h3>Paso 2: Generar Detalle para Factura</h3>
-            <p>Seleccioná el período y al paciente para autocompletar los datos:</p>
-            
-            <!-- Selectores de Mes y Año -->
-            <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                <div style="flex: 1;">
-                    <label for="selectorMes" style="font-weight: 600; display: block; margin-bottom: 5px;">Mes:</label>
-                    <select id="selectorMes" class="selector-obras" style="width: 100%;">
-                        <option value="ENERO">Enero</option>
-                        <option value="FEBRERO">Febrero</option>
-                        <option value="MARZO">Marzo</option>
-                        <option value="ABRIL">Abril</option>
-                        <option value="MAYO">Mayo</option>
-                        <option value="JUNIO">Junio</option>
-                        <option value="JULIO" selected>Julio</option>
-                        <option value="AGOSTO">Agosto</option>
-                        <option value="SEPTIEMBRE">Septiembre</option>
-                        <option value="OCTUBRE">Octubre</option>
-                        <option value="NOVIEMBRE">Noviembre</option>
-                        <option value="DICIEMBRE">Diciembre</option>
-                    </select>
-                </div>
+        <div style="text-align: left; margin-bottom: 20px;">
+            <label style="font-size: 13px; font-weight: 600;">Contraseña:</label>
+            <input type="password" id="inputPassword" value="1234" class="selector-obras" style="width: 100%; margin-top: 5px; box-sizing: border-box;" />
+        </div>
 
-                <div style="flex: 1;">
-                    <label for="selectorAnio" style="font-weight: 600; display: block; margin-bottom: 5px;">Año:</label>
-                    <select id="selectorAnio" class="selector-obras" style="width: 100%;">
-                        <option value="2025">2025</option>
-                        <option value="2026" selected>2026</option>
-                        <option value="2027">2027</option>
-                    </select>
-                </div>
-            </div>
+        <button id="btnLogin" class="btn-principal" style="width: 100%; padding: 12px;">Ingresar al Sistema</button>
+        <p id="errorLogin" style="color: red; font-size: 13px; margin-top: 10px; display: none;">Contraseña incorrecta.</p>
+    </div>
 
-            <!-- Selector de Pacientes -->
-            <div style="margin-bottom: 15px;">
-                <label for="selectorPacientes" style="font-weight: 600; display: block; margin-bottom: 5px;">Paciente / Obra Social:</label>
-                <select id="selectorPacientes" class="selector-obras">
-                    <option value="">-- Seleccionar Paciente --</option>
-                </select>
-            </div>
-            
-            <!-- Panel de Resultados -->
-            <div id="resultadoDetalle" style="margin-top: 20px; background: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #eaeaea; display: none;">
-                <p><strong>Obra Social:</strong> <span id="txtObraSocial"></span></p>
-                <p><strong>CUIT:</strong> <span id="txtCuit"></span></p>
-                <p><strong>Condición IVA:</strong> <span id="txtIva"></span></p>
-                <p><strong>Condición de Venta:</strong> <span id="txtVenta"></span></p>
-                <p><strong>Domicilio:</strong> <span id="txtDomicilio"></span></p>
-                <br>
-                <p><strong>Detalle para la factura:</strong></p>
-                <p id="txtPlantilla" style="font-family: monospace; background: #fff; padding: 12px; border: 1px solid #ddd; border-radius: 6px; white-space: pre-wrap;"></p>
+
+    <!-- CONTENIDO DE LA APLICACIÓN (Oculto hasta iniciar sesión) -->
+    <div id="contenidoApp" style="display: none;">
+        
+        <!-- Sección Principal con Imagen -->
+        <header class="hero">
+            <div class="hero-content">
+                <h1>Facturación simple para el equipo interdisciplinario</h1>
+                <p>Agilizá la carga de tus prestaciones, consultá los nomencladores de discapacidad actualizados y enviá tus planillas a las Obras Sociales en un par de clics.</p>
                 
-                <!-- Botón de Copiar al Portapapeles -->
-                <button id="btnCopiar" class="btn-secundario" style="margin-top: 10px; background-color: #1d1d1f; color: #fff;">Copiar Detalle al Portapapeles</button>
-                <span id="mensajeCopiado" style="margin-left: 10px; color: green; font-size: 14px; display: none;">¡Copiado con éxito!</span>
+                <a href="https://auth.afip.gob.ar/contribuyente_/login.xhtml" target="_blank" style="text-decoration: none;">
+                    <button class="btn-principal">Ingresar a ARCA (Factura C)</button>
+                </a>
+                
+                <a href="instructivo.html" style="text-decoration: none; margin-left: 15px;">
+                    <button class="btn-secundario">Ver Instructivo</button>
+                </a>
             </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=600&q=80" alt="Sesión de psicopedagogía infantil">
+            </div>
+        </header>
+
+        <hr class="separador">
+
+        <!-- Sección de Nomencladores y Envíos -->
+        <section class="panel-control">
+            <h2>Panel de Nomencladores</h2>
+            <p>Valores actualizados al mes en curso.</p>
             
-            <br><br>
-            <button class="btn-secundario">Redactar Correo</button>
-        </div>
-    </section>
+            <div class="tarjetas-nomencladores">
+                <div class="tarjeta-valor">
+                    <h3>Valor OSDE</h3>
+                    <p class="precio">$ 13.559,00</p>
+                    <span class="etiqueta-dinamica">Actualización automática pendiente...</span>
+                </div>
+                
+                <div class="tarjeta-valor">
+                    <h3>Otro Nomenclador</h3>
+                    <p class="precio">$ 20.127,95</p>
+                    <span class="etiqueta-dinamica">Actualización automática pendiente...</span>
+                </div>
+            </div>
 
-    <!-- Pie de Página (Footer) -->
-    <footer style="background-color: #f5f5f7; padding: 30px 20px; text-align: center; border-top: 1px solid #eaeaea; margin-top: 50px; color: #666; font-size: 14px;">
-        <p><strong>Lic. Carolina Noelia Giménez</strong> - Psicopedagoga (Esp. en Intervención y Estimulación Temprana)</p>
-        <p>Matrícula Provincial: M.P. 104.339 | Tel: 15-5818-4469 | Email: lic_carolina_gimenez@hotmail.com</p>
-        <p style="margin-top: 15px; font-size: 12px; color: #999;">© 2026 FacturApp - Todos los derechos reservados.</p>
-    </footer>
+            <div class="seccion-envio">
+                <h3>Paso 2: Generar Detalle para Factura</h3>
+                <p>Seleccioná el período y al paciente para autocompletar los datos:</p>
+                
+                <!-- Selectores de Mes y Año -->
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label for="selectorMes" style="font-weight: 600; display: block; margin-bottom: 5px;">Mes:</label>
+                        <select id="selectorMes" class="selector-obras" style="width: 100%;">
+                            <option value="ENERO">Enero</option>
+                            <option value="FEBRERO">Febrero</option>
+                            <option value="MARZO">Marzo</option>
+                            <option value="ABRIL">Abril</option>
+                            <option value="MAYO">Mayo</option>
+                            <option value="JUNIO">Junio</option>
+                            <option value="JULIO" selected>Julio</option>
+                            <option value="AGOSTO">Agosto</option>
+                            <option value="SEPTIEMBRE">Septiembre</option>
+                            <option value="OCTUBRE">Octubre</option>
+                            <option value="NOVIEMBRE">Noviembre</option>
+                            <option value="DICIEMBRE">Diciembre</option>
+                        </select>
+                    </div>
 
-    <!-- Base de datos y Lógica JavaScript -->
+                    <div style="flex: 1;">
+                        <label for="selectorAnio" style="font-weight: 600; display: block; margin-bottom: 5px;">Año:</label>
+                        <select id="selectorAnio" class="selector-obras" style="width: 100%;">
+                            <option value="2025">2025</option>
+                            <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Selector de Pacientes -->
+                <div style="margin-bottom: 15px;">
+                    <label for="selectorPacientes" style="font-weight: 600; display: block; margin-bottom: 5px;">Paciente / Obra Social:</label>
+                    <select id="selectorPacientes" class="selector-obras">
+                        <option value="">-- Seleccionar Paciente --</option>
+                    </select>
+                </div>
+                
+                <!-- Panel de Resultados -->
+                <div id="resultadoDetalle" style="margin-top: 20px; background: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #eaeaea; display: none;">
+                    <p><strong>Obra Social:</strong> <span id="txtObraSocial"></span></p>
+                    <p><strong>CUIT:</strong> <span id="txtCuit"></span></p>
+                    <p><strong>Condición IVA:</strong> <span id="txtIva"></span></p>
+                    <p><strong>Condición de Venta:</strong> <span id="txtVenta"></span></p>
+                    <p><strong>Domicilio:</strong> <span id="txtDomicilio"></span></p>
+                    <br>
+                    <p><strong>Detalle para la factura:</strong></p>
+                    <p id="txtPlantilla" style="font-family: monospace; background: #fff; padding: 12px; border: 1px solid #ddd; border-radius: 6px; white-space: pre-wrap;"></p>
+                    
+                    <button id="btnCopiar" class="btn-secundario" style="margin-top: 10px; background-color: #1d1d1f; color: #fff;">Copiar Detalle al Portapapeles</button>
+                    <span id="mensajeCopiado" style="margin-left: 10px; color: green; font-size: 14px; display: none;">¡Copiado con éxito!</span>
+                </div>
+                
+                <br><br>
+                <button class="btn-secundario">Redactar Correo</button>
+            </div>
+        </section>
+
+        <!-- Pie de Página Institucional -->
+        <footer style="background-color: #f5f5f7; padding: 30px 20px; text-align: center; border-top: 1px solid #eaeaea; margin-top: 50px; color: #666; font-size: 14px;">
+            <p><strong>FacturApp</strong> - Simplificando la facturación para equipos interdisciplinarios de salud.</p>
+            <p style="margin-top: 10px; font-size: 12px; color: #999;">© 2026 FacturApp - Todos los derechos reservados.</p>
+        </footer>
+
+    </div>
+
+    <!-- Lógica JavaScript de Autenticación y Datos -->
     <script>
         const pacientesCarolina = [
             {
@@ -222,6 +249,17 @@
             }
         ];
 
+        // Elementos de Login
+        const pantallaLogin = document.getElementById("pantallaLogin");
+        const contenidoApp = document.getElementById("contenidoApp");
+        const btnLogin = document.getElementById("btnLogin");
+        const inputPassword = document.getElementById("inputPassword");
+        const errorLogin = document.getElementById("errorLogin");
+        const infoUsuario = document.getElementById("infoUsuario");
+        const nombreProfesional = document.getElementById("nombreProfesional");
+        const btnCerrarSesion = document.getElementById("btnCerrarSesion");
+
+        // Elementos de la App de Facturación
         const selectPaciente = document.getElementById("selectorPacientes");
         const selectMes = document.getElementById("selectorMes");
         const selectAnio = document.getElementById("selectorAnio");
@@ -235,7 +273,7 @@
         const btnCopiar = document.getElementById("btnCopiar");
         const mensajeCopiado = document.getElementById("mensajeCopiado");
 
-        // Llenar el select de pacientes
+        // Llenar pacientes
         pacientesCarolina.forEach((paciente, index) => {
             let option = document.createElement("option");
             option.value = index;
@@ -243,7 +281,34 @@
             selectPaciente.appendChild(option);
         });
 
-        // Función para actualizar el texto según el paciente, el mes y el año elegidos
+        // Evento de Login
+        btnLogin.addEventListener("click", () => {
+            // Contraseña genérica por ahora ("1234")
+            if (inputPassword.value === "1234") {
+                pantallaLogin.style.display = "none";
+                contenidoApp.style.display = "block";
+                
+                // Mostrar usuario arriba a la derecha
+                nombreProfesional.textContent = "Lic. Carolina Noelia Giménez";
+                infoUsuario.style.display = "inline";
+                btnCerrarSesion.style.display = "inline";
+                errorLogin.style.display = "none";
+            } else {
+                errorLogin.style.display = "block";
+            }
+        });
+
+        // Evento de Cerrar Sesión (Salir)
+        btnCerrarSesion.addEventListener("click", (e) => {
+            e.preventDefault();
+            contenidoApp.style.display = "none";
+            pantallaLogin.style.display = "block";
+            inputPassword.value = "";
+            infoUsuario.style.display = "none";
+            btnCerrarSesion.style.display = "none";
+        });
+
+        // Actualizar detalle de factura
         function actualizarDetalle() {
             const index = selectPaciente.value;
             if (index === "") {
@@ -271,7 +336,7 @@
         selectMes.addEventListener("change", actualizarDetalle);
         selectAnio.addEventListener("change", actualizarDetalle);
 
-        // Lógica del Botón Copiar al Portapapeles
+        // Copiar al portapapeles
         btnCopiar.addEventListener("click", () => {
             const textoACopiar = txtPlantilla.textContent;
             navigator.clipboard.writeText(textoACopiar).then(() => {
