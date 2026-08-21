@@ -22,22 +22,23 @@
     <!-- PANTALLA DE LOGIN -->
     <div id="pantallaLogin" style="max-width: 400px; margin: 80px auto; padding: 30px; background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;">
         <h2>Iniciar Sesión</h2>
-        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Ingresá tus credenciales para acceder a tu panel de facturación.</p>
+        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Seleccioná tu perfil para acceder al sistema.</p>
         
         <div style="text-align: left; margin-bottom: 15px;">
             <label style="font-size: 13px; font-weight: 600;">Seleccionar Profesional:</label>
             <select id="inputUsuario" class="selector-obras" style="width: 100%; margin-top: 5px;">
                 <option value="carolina">Lic. Carolina Noelia Giménez</option>
+                <option value="perez">Dr. Pérez (Perfil de Prueba)</option>
             </select>
         </div>
 
         <div style="text-align: left; margin-bottom: 20px;">
             <label style="font-size: 13px; font-weight: 600;">Contraseña:</label>
-            <input type="password" id="inputPassword" value="1234" class="selector-obras" style="width: 100%; margin-top: 5px; box-sizing: border-box;" />
+            <input type="password" id="inputPassword" placeholder="Ingresá tu contraseña" class="selector-obras" style="width: 100%; margin-top: 5px; box-sizing: border-box;" />
         </div>
 
         <button id="btnLogin" class="btn-principal" style="width: 100%; padding: 12px;">Ingresar al Sistema</button>
-        <p id="errorLogin" style="color: red; font-size: 13px; margin-top: 10px; display: none;">Contraseña incorrecta.</p>
+        <p id="errorLogin" style="color: red; font-size: 13px; margin-top: 10px; display: none;">Contraseña incorrecta (Carolina: 1234 / Pérez: 0000).</p>
     </div>
 
 
@@ -62,17 +63,16 @@
 
         <section class="panel-control">
             <h2>Panel de Facturación</h2>
-            <p>Subí tu factura en PDF para autoconfigurar o seleccioná tus datos guardados.</p>
+            <p>Gestioná tus datos y tus pacientes asignados.</p>
             
-            <!-- AQUÍ VA EL NUEVO BLOQUE DE CARGA DE PDF -->
+            <!-- SECCIÓN DE CARGA DE PDF (Visible especialmente para perfiles nuevos como el Dr. Pérez) -->
             <div id="seccionCarga" style="background: #f0f8ff; border: 2px dashed #007bff; padding: 25px; text-align: center; border-radius: 12px; margin-bottom: 25px;">
                 <input type="file" id="inputPdf" accept="application/pdf" style="display: none;">
                 <label for="inputPdf" style="cursor: pointer; font-weight: 600; color: #007bff; display: block;">
-                    📁 Haz clic aquí para subir tu factura PDF o arrástrala aquí
+                    📁 Haz clic aquí para subir tu factura PDF y autoconfigurar tu perfil
                 </label>
                 <p id="nombreArchivo" style="font-size: 13px; margin-top: 8px; color: #555;"></p>
             </div>
-            <!-- FIN DEL BLOQUE DE CARGA -->
 
             <div class="seccion-envio">
                 <h3>Paso 2: Generar Detalle para Factura</h3>
@@ -81,16 +81,27 @@
                     <div style="flex: 1;">
                         <label for="selectorMes" style="font-weight: 600; display: block; margin-bottom: 5px;">Mes:</label>
                         <select id="selectorMes" class="selector-obras" style="width: 100%;">
+                            <option value="ENERO">Enero</option>
+                            <option value="FEBRERO">Febrero</option>
+                            <option value="MARZO">Marzo</option>
+                            <option value="ABRIL">Abril</option>
+                            <option value="MAYO">Mayo</option>
+                            <option value="JUNIO">Junio</option>
                             <option value="JULIO" selected>Julio</option>
                             <option value="AGOSTO">Agosto</option>
                             <option value="SEPTIEMBRE">Septiembre</option>
+                            <option value="OCTUBRE">Octubre</option>
+                            <option value="NOVIEMBRE">Noviembre</option>
+                            <option value="DICIEMBRE">Diciembre</option>
                         </select>
                     </div>
 
                     <div style="flex: 1;">
                         <label for="selectorAnio" style="font-weight: 600; display: block; margin-bottom: 5px;">Año:</label>
                         <select id="selectorAnio" class="selector-obras" style="width: 100%;">
+                            <option value="2025">2025</option>
                             <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
                         </select>
                     </div>
                 </div>
@@ -124,39 +135,173 @@
 
     </div>
 
+    <!-- Lógica JavaScript -->
     <script>
-        // Aquí conservamos la lógica de login y los datos que ya teníamos
+        // Base de datos completa de Carolina
+        const pacientesCarolina = [
+            {
+                nombre: "Yago Carnip Mandra",
+                dni: "46.871.612",
+                afiliado: "60929068103",
+                obraSocial: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS",
+                cuit: "30546741253",
+                iva: "IVA Responsable Inscripto",
+                condicionVenta: "Cuenta Corriente",
+                domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires",
+                textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46 871 612, AF N°: 60929068103 PERIODO: [MES] [ANIO] Valor según nomenclador OSDE."
+            },
+            {
+                nombre: "Joaquin Santana",
+                dni: "54.702.333",
+                afiliado: "615682214503",
+                obraSocial: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS",
+                cuit: "30546741253",
+                iva: "IVA Responsable Inscripto",
+                condicionVenta: "Cuenta Corriente",
+                domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires",
+                textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Joaquin Santana DNI: 54.702.333, AF N°: 615682214503 PERIODO: [MES] [ANIO] Valor según Nomenclador OSDE."
+            },
+            {
+                nombre: "Homero Giles",
+                dni: "56.076.850",
+                afiliado: "1-56076850",
+                obraSocial: "SANTILLAN ROBERTO LOMBARDO",
+                cuit: "20169260630",
+                iva: "Consumidor Final",
+                condicionVenta: "Otra",
+                domicilio: "Cavia 545",
+                textoBase: "Honorarios Profesionales por la presentación de psicopedagogía al niño: Homero Giles DNI: 56076850 AF N°: 1-56076850 PERIODO: [MES] [ANIO] valor según nomenclador Nac. Res. Conjunta 2024"
+            },
+            {
+                nombre: "Luna Bautista Mujis",
+                dni: "56.629.620",
+                afiliado: "4 340196 01 01 9",
+                obraSocial: "OMINT SOCIEDAD ANONIMA DE SERVICIOS",
+                cuit: "30550245309",
+                iva: "IVA Responsable Inscripto",
+                condicionVenta: "Otra",
+                domicilio: "Carlos Pellegrini 1363 Piso:9 - Capital Federal, Buenos Aires",
+                textoBase: "Honorarios profesionales por la prestación de psicopedagogía al niño: Luna Bautista Mujis DNI: 56.629.620 AF: 4 340196 01 01 9 Período: [MES] [ANIO] Según resolución conjunta 8."
+            },
+            {
+                nombre: "Noah Telechea",
+                dni: "No especificado",
+                afiliado: "56948636",
+                obraSocial: "OBRA SOCIAL DE LOS EMPLEADOS DE COMERCIO Y ACTIVIDADES CIVILES",
+                cuit: "30550273558",
+                iva: "IVA Sujeto Exento",
+                condicionVenta: "Cuenta Corriente",
+                domicilio: "Moreno 648 - Capital Federal, Buenos Aires",
+                textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: NOAH TELECHEA, AFILIADO 56948636 PERÍODO: [MES] [ANIO] Resolución Conjunta 9/2024."
+            },
+            {
+                nombre: "Ignacio Ferro Junco",
+                dni: "51.337.834",
+                afiliado: "20-307223016/02",
+                obraSocial: "OBRA SOCIAL DE TECNICOS DE VUELO DE LINEAS AEREAS",
+                cuit: "30624957942",
+                iva: "IVA Sujeto Exento",
+                condicionVenta: "Otra",
+                domicilio: "Víctor Hugo 369 - Capital Federal, Buenos Aires",
+                textoBase: "Honorarios Profesionales por la presentación de psicopedagogia al niño: Ignacio Ferro Junco DNI: 51.337.834 A.F.: 20-307223016/02 PERIODO: [MES] [ANIO] Valor según nomenclador Nac. Res. Conjunta 8/2022."
+            },
+            {
+                nombre: "Gonzalo Pineda",
+                dni: "55.181.937",
+                afiliado: "No especificado",
+                obraSocial: "GALENO ARGENTINA SOCIEDAD ANONIMA",
+                cuit: "30522428163",
+                iva: "IVA Responsable Inscripto",
+                condicionVenta: "Otra",
+                domicilio: "Elvira Rawson de Dellepiane 150 - Capital Federal, Buenos Aires",
+                textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: Gonzalo Pineda DNI: 55181937 PERIODO: [MES] [ANIO] valor según nomenclador Nac. Res. Conjunta 8/2022"
+            },
+            {
+                nombre: "Alma Sesto",
+                dni: "53.288.131",
+                afiliado: "No especificado",
+                obraSocial: "MEDICUS SOCIEDAD ANONIMA DE ASISTENCIA MEDICA Y CIENTIFICA",
+                cuit: "30546771314",
+                iva: "IVA Responsable Inscripto",
+                condicionVenta: "Otra",
+                domicilio: "Larrea 877 Piso:06 - Capital Federal, Buenos Aires",
+                textoBase: "Honorarios profesionales de psicopedagogía, beneficiaria Alma Sesto. DNI: 53.288.131 Período: [MES] [ANIO]"
+            }
+        ];
+
+        // Base de datos vacía o inicial para el Dr. Pérez (para empezar a poblar)
+        let pacientesPerez = [];
+
         const pantallaLogin = document.getElementById("pantallaLogin");
         const contenidoApp = document.getElementById("contenidoApp");
         const btnLogin = document.getElementById("btnLogin");
+        const inputUsuario = document.getElementById("inputUsuario");
         const inputPassword = document.getElementById("inputPassword");
         const errorLogin = document.getElementById("errorLogin");
         const infoUsuario = document.getElementById("infoUsuario");
         const nombreProfesional = document.getElementById("nombreProfesional");
         const btnCerrarSesion = document.getElementById("btnCerrarSesion");
 
-        // Detección del input de archivo PDF que acabamos de agregar
+        const selectPaciente = document.getElementById("selectorPacientes");
+        const selectMes = document.getElementById("selectorMes");
+        const selectAnio = document.getElementById("selectorAnio");
+        const panelResultado = document.getElementById("resultadoDetalle");
+        const txtObraSocial = document.getElementById("txtObraSocial");
+        const txtCuit = document.getElementById("txtCuit");
+        const txtIva = document.getElementById("txtIva");
+        const txtVenta = document.getElementById("txtVenta");
+        const txtDomicilio = document.getElementById("txtDomicilio");
+        const txtPlantilla = document.getElementById("txtPlantilla");
+        const btnCopiar = document.getElementById("btnCopiar");
+        const mensajeCopiado = document.getElementById("mensajeCopiado");
+
         const inputPdf = document.getElementById("inputPdf");
         const nombreArchivo = document.getElementById("nombreArchivo");
 
-        inputPdf.addEventListener("change", (e) => {
-            const archivo = e.target.files[0];
-            if (archivo) {
-                nombreArchivo.textContent = `Archivo seleccionado: ${archivo.name}`;
-                // Aquí en el siguiente paso pondremos el código para leer el PDF
+        let pacientesActivos = [];
+
+        // Lógica de Login con validación de cuentas
+        btnLogin.addEventListener("click", () => {
+            const usuarioSeleccionado = inputUsuario.value;
+            const password = inputPassword.value;
+
+            if (usuarioSeleccionado === "carolina" && password === "1234") {
+                pacientesActivos = pacientesCarolina;
+                nombreProfesional.textContent = "Lic. Carolina Noelia Giménez";
+                iniciarSesionExitosa();
+            } else if (usuarioSeleccionado === "perez" && password === "0000") {
+                pacientesActivos = pacientesPerez;
+                nombreProfesional.textContent = "Dr. Pérez";
+                iniciarSesionExitosa();
+            } else {
+                errorLogin.style.display = "block";
             }
         });
 
-        btnLogin.addEventListener("click", () => {
-            if (inputPassword.value === "1234") {
-                pantallaLogin.style.display = "none";
-                contenidoApp.style.display = "block";
-                nombreProfesional.textContent = "Lic. Carolina Noelia Giménez";
-                infoUsuario.style.display = "inline";
-                btnCerrarSesion.style.display = "inline";
-                errorLogin.style.display = "none";
-            } else {
-                errorLogin.style.display = "block";
+        function iniciarSesionExitosa() {
+            pantallaLogin.style.display = "none";
+            contenidoApp.style.display = "block";
+            infoUsuario.style.display = "inline";
+            btnCerrarSesion.style.display = "inline";
+            errorLogin.style.display = "none";
+            cargarSelectPacientes();
+        }
+
+        function cargarSelectPacientes() {
+            selectPaciente.innerHTML = '<option value="">-- Seleccionar Paciente --</option>';
+            pacientesActivos.forEach((paciente, index) => {
+                let option = document.createElement("option");
+                option.value = index;
+                option.textContent = `${paciente.nombre} (${paciente.obraSocial})`;
+                selectPaciente.appendChild(option);
+            });
+        }
+
+        // Simulación de carga de PDF para el nuevo perfil
+        inputPdf.addEventListener("change", (e) => {
+            const archivo = e.target.files[0];
+            if (archivo) {
+                nombreArchivo.textContent = `Archivo cargado: ${archivo.name}. (Próximamente procesaremos el PDF aquí para armar el perfil automáticamente).`;
             }
         });
 
@@ -167,6 +312,44 @@
             inputPassword.value = "";
             infoUsuario.style.display = "none";
             btnCerrarSesion.style.display = "none";
+            panelResultado.style.display = "none";
+        });
+
+        function actualizarDetalle() {
+            const index = selectPaciente.value;
+            if (index === "") {
+                panelResultado.style.display = "none";
+                return;
+            }
+
+            const p = pacientesActivos[index];
+            const mesSeleccionado = selectMes.value;
+            const anioSeleccionado = selectAnio.value;
+
+            txtObraSocial.textContent = p.obraSocial;
+            txtCuit.textContent = p.cuit;
+            txtIva.textContent = p.iva;
+            txtVenta.textContent = p.condicionVenta;
+            txtDomicilio.textContent = p.domicilio;
+            
+            let textoFinal = p.textoBase.replace("[MES]", mesSeleccionado).replace("[ANIO]", anioSeleccionado);
+            txtPlantilla.textContent = textoFinal;
+
+            panelResultado.style.display = "block";
+        }
+
+        selectPaciente.addEventListener("change", actualizarDetalle);
+        selectMes.addEventListener("change", actualizarDetalle);
+        selectAnio.addEventListener("change", actualizarDetalle);
+
+        btnCopiar.addEventListener("click", () => {
+            const textoACopiar = txtPlantilla.textContent;
+            navigator.clipboard.writeText(textoACopiar).then(() => {
+                mensajeCopiado.style.display = "inline";
+                setTimeout(() => {
+                    mensajeCopiado.style.display = "none";
+                }, 2000);
+            });
         });
     </script>
 
