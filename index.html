@@ -53,6 +53,11 @@
                 <a href="https://auth.afip.gob.ar/contribuyente_/login.xhtml" target="_blank" style="text-decoration: none;">
                     <button class="btn-principal">Ingresar a ARCA (Factura C)</button>
                 </a>
+                
+                <!-- BOTÓN RESTAURADO -->
+                <a href="instructivo.html" style="text-decoration: none; margin-left: 15px;">
+                    <button class="btn-secundario">Ver Instructivo</button>
+                </a>
             </div>
             <div class="hero-image">
                 <img src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=600&q=80" alt="Sesión de psicopedagogía infantil">
@@ -65,7 +70,7 @@
             <h2>Panel de Facturación</h2>
             <p>Gestioná tus datos y tus pacientes asignados.</p>
             
-            <!-- SECCIÓN DE CARGA DE PDF (Visible especialmente para perfiles nuevos como el Dr. Pérez) -->
+            <!-- SECCIÓN DE CARGA DE PDF -->
             <div id="seccionCarga" style="background: #f0f8ff; border: 2px dashed #007bff; padding: 25px; text-align: center; border-radius: 12px; margin-bottom: 25px;">
                 <input type="file" id="inputPdf" accept="application/pdf" style="display: none;">
                 <label for="inputPdf" style="cursor: pointer; font-weight: 600; color: #007bff; display: block;">
@@ -137,7 +142,6 @@
 
     <!-- Lógica JavaScript -->
     <script>
-        // Base de datos completa de Carolina
         const pacientesCarolina = [
             {
                 nombre: "Yago Carnip Mandra",
@@ -229,7 +233,6 @@
             }
         ];
 
-        // Base de datos vacía o inicial para el Dr. Pérez (para empezar a poblar)
         let pacientesPerez = [];
 
         const pantallaLogin = document.getElementById("pantallaLogin");
@@ -260,7 +263,6 @@
 
         let pacientesActivos = [];
 
-        // Lógica de Login con validación de cuentas
         btnLogin.addEventListener("click", () => {
             const usuarioSeleccionado = inputUsuario.value;
             const password = inputPassword.value;
@@ -297,7 +299,6 @@
             });
         }
 
-        // Simulación de carga de PDF para el nuevo perfil
         inputPdf.addEventListener("change", (e) => {
             const archivo = e.target.files[0];
             if (archivo) {
