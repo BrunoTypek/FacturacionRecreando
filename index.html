@@ -230,7 +230,7 @@
         <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT BLINDADA -->
+    <!-- LÓGICA JAVASCRIPT CORREGIDA CON EXTRACCIÓN ZONAL -->
     <script>
         const baseCarolina = [
             { nombre: "Yago Carnip Mandra", obraSocial: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46.871.612, AF N°: 60929068103 PERIODO: [MES] [ANIO] Valor según nomenclador OSDE." },
@@ -354,12 +354,12 @@
             }
         });
 
-        // LECTURA DE PDF BLINDADA Y ABSOLUTAMENTE PRECISA
+        // PARSEO DE PDF OPTIMIZADO Y ROBUSTO
         inputPdf.addEventListener("change", async (e) => {
             const archivo = e.target.files[0];
             if (!archivo) return;
 
-            nombreArchivo.textContent = `Procesando factura y extrayendo datos fiscales...`;
+            nombreArchivo.textContent = `Analizando comprobante PDF...`;
             nombreArchivo.classList.remove("hidden");
 
             try {
@@ -375,72 +375,94 @@
                     textoCompleto += textItems.join(" ") + " ";
                 }
 
-                // 1. EXTRACCIÓN DE LA RAZÓN SOCIAL / OBRA SOCIAL (Buscando específicamente el bloque del receptor)
-                let obraSocialExtraida = "OBRA SOCIAL GENERAL";
-                // Buscamos el texto exacto entre "Apellido y Nombre / Razón Social:" y "Condición frente al IVA:"
-                const regexRazon = /(?:Apellido y Nombre \/ Razón Social|Razón Social)[:\s]+([A-ZÁÉÍÓÚÑ0-9\s\.\,\-\/]+?)(?=\s+Condición frente al IVA|\s+Domicilio|$)/i;
-                const matchRazon = textoCompleto.match(regexRazon);
-                if (matchRazon && matchRazon[1].trim().length > 3) {
-                    obraSocialExtraida = matchRazon[1].trim().replace(/CUIT:.*$/, '').trim();
+                // Normalizamos espacios
+                const textoLimpio = textoCompleto.replace(/\s+/g, ' ');
+
+                // 1. Detección de la OBRA SOCIAL / RAZÓN SOCIAL RECEPTORA
+                let obraSocialExtraida = "";
+                const matchRazon = textoLimpio.match(/Razón Social:\s*([^:]+?)(?=\s+Condición frente al IVA|\s+Domicilio|\s+CUIT|$)/i);
+                
+                if (matchRazon && matchRazon[1]) {
+                    let candidata = matchRazon[1].trim();
+                    // Si capturó al emisor ("GIMENEZ CAROLINA NOELIA"), buscamos la segunda ocurrencia que es el receptor
+                    if (candidata.toUpperCase().includes("GIMENEZ") || candidata.toUpperCase().includes("CAROLINA")) {
+                        const segundaOcurrencia = textoLimpio.match(/Apellido y Nombre \/ Razón Social:\s*([A-Z0-9ÁÉÍÓÚÑ\s\.\,\-]+?)(?=\s+Condición frente al IVA|\s+Domicilio|$)/i);
+                        if (segundaOcurrencia && segundaOcurrencia[1]) {
+                            obraSocialExtraida = segundaOcurrencia[1].trim();
+                        }
+                    } else {
+                        obraSocialExtraida = candidata;
+                    }
                 }
 
-                // 2. EXTRACCIÓN DEL CUIT DEL RECEPTOR (El segundo CUIT que aparece en las facturas C de ARCA)
+                // Si no se ubicó por etiqueta exacta, buscamos patrones de obras sociales típicas en el texto
+                if (!obraSocialExtraida || obraSocialExtraida.length < 3) {
+                    const txtUpper = textoLimpio.toUpperCase();
+                    if (txtUpper.includes("TECNICOS DE VUELO")) obraSocialExtraida = "OBRA SOCIAL DE TECNICOS DE VUELO DE LINEAS AEREAS";
+                    else if (txtUpper.includes("OSDE")) obraSocialExtraida = "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS";
+                    else if (txtUpper.includes("OMINT")) obraSocialExtraida = "OMINT SOCIEDAD ANONIMA DE SERVICIOS";
+                    else if (txtUpper.includes("GALENO")) obraSocialExtraida = "GALENO ARGENTINA SOCIEDAD ANONIMA";
+                    else if (txtUpper.includes("MEDICUS")) obraSocialExtraida = "MEDICUS SOCIEDAD ANONIMA DE ASISTENCIA MEDICA Y CIENTIFICA";
+                    else if (txtUpper.includes("OSECAC") || txtUpper.includes("EMPLEADOS DE COMERCIO")) obraSocialExtraida = "OBRA SOCIAL DE LOS EMPLEADOS DE COMERCIO Y ACTIVIDADES CIVILES";
+                    else if (txtUpper.includes("SANTILLAN")) obraSocialExtraida = "SANTILLAN ROBERTO LOMBARDO";
+                    else obraSocialExtraida = "OBRA SOCIAL GENERAL";
+                }
+
+                // 2. EXTRACCIÓN DEL CUIT DEL RECEPTOR
                 let cuitExtraido = "30500000019";
-                const matchesCuit = [...textoCompleto.matchAll(/CUIT[:\s]*(\d{2}[-\s]?\d{8}[-\s]?\d)/gi)];
+                const matchesCuit = [...textoLimpio.matchAll(/CUIT:\s*(\d{2}[-\s]?\d{8}[-\s]?\d)/gi)];
                 if (matchesCuit.length >= 2) {
-                    // El primer CUIT suele ser el del emisor (Carolina), el segundo es el de la Obra Social
                     cuitExtraido = matchesCuit[1][1].replace(/[-\s]/g, '');
                 } else if (matchesCuit.length === 1) {
                     cuitExtraido = matchesCuit[0][1].replace(/[-\s]/g, '');
                 }
 
-                // 3. EXTRACCIÓN DE CONDICIÓN FRENTE AL IVA DEL RECEPTOR
+                // 3. CONDICIÓN IVA RECEPTOR
                 let ivaExtraido = "IVA Responsable Inscripto";
-                const regexIva = /Condición frente al IVA[:\s]+([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?=\s+CUIT|\s+Domicilio|\s+Condición de venta|$)/i;
-                const matchIva = textoCompleto.match(regexIva);
-                if (matchIva && matchIva[1].trim().length > 3) {
-                    ivaExtraido = matchIva[1].trim();
-                } else if (textoCompleto.toUpperCase().includes("SUJETO EXENTO")) {
-                    ivaExtraido = "IVA Sujeto Exento";
-                } else if (textoCompleto.toUpperCase().includes("CONSUMIDOR FINAL")) {
-                    ivaExtraido = "Consumidor Final";
+                const matchIva = textoLimpio.match(/Condición frente al IVA:\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?=\s+Domicilio|\s+CUIT|\s+Condición de venta|$)/i);
+                if (matchIva && matchIva[1]) {
+                    const tempIva = matchIva[1].trim();
+                    if (tempIva.toUpperCase().includes("EXENTO")) ivaExtraido = "IVA Sujeto Exento";
+                    else if (tempIva.toUpperCase().includes("CONSUMIDOR")) ivaExtraido = "Consumidor Final";
+                    else if (tempIva.toUpperCase().includes("INSCRIPTO")) ivaExtraido = "IVA Responsable Inscripto";
+                    else ivaExtraido = tempIva;
                 }
 
                 // 4. EXTRACCIÓN DEL DOMICILIO COMPLETO DEL RECEPTOR
-                let domicilioExtraido = "Capital Federal, Buenos Aires";
-                // Buscamos específicamente el domicilio que está en la sección del receptor (después del CUIT o Condición IVA)
-                const regexDom = /Domicilio[:\s]+([A-Za-z0-9ÁÉÍÓÚáéíóúñÑ\s\.\,\-\/]+?)(?=\s+Condición de venta|\s+Código|\s+Producto|$)/gi;
-                let matchesDom = [...textoCompleto.matchAll(regexDom)];
+                let domicilioExtraido = "";
+                const matchesDom = [...textoLimpio.matchAll(/Domicilio:\s*([A-Za-z0-9ÁÉÍÓÚáéíóúñÑ\s\.\,\-\/]+?)(?=\s+Condición de venta|\s+Código|\s+Producto|$)/gi)];
                 if (matchesDom.length >= 2) {
-                    // El segundo domicilio corresponde al receptor/obra social
                     domicilioExtraido = matchesDom[1][1].trim();
                 } else if (matchesDom.length === 1) {
                     domicilioExtraido = matchesDom[0][1].trim();
                 }
+                if (!domicilioExtraido || domicilioExtraido.length < 5) {
+                    domicilioExtraido = "Capital Federal, Buenos Aires";
+                }
 
                 // 5. CONDICIÓN DE VENTA
                 let condicionVentaExtraida = "Otra";
-                if (textoCompleto.toUpperCase().includes("CUENTA CORRIENTE")) {
+                if (textoLimpio.toUpperCase().includes("CUENTA CORRIENTE")) {
                     condicionVentaExtraida = "Cuenta Corriente";
                 }
 
-                // 6. EXTRACCIÓN DEL NOMBRE DEL PACIENTE EN EL DETALLE
+                // 6. NOMBRE DEL PACIENTE
                 let nombrePacienteReal = "";
-                const patronNino = /(?:AL NIÑO|AL NIÑA|PACIENTE|BENEFICIARIO|BENEFICIARIA):\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?:DNI|AFILIADO|AF|PERIODO|VALOR|,|$)/i;
-                const matchPaciente = textoCompleto.match(patronNino);
+                const patronNino = /(?:AL NIÑO|AL NIÑA|PACIENTE|BENEFICIARIO|BENEFICIARIA):\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?=\s+DNI|\s+AFILIADO|\s+AF|\s+PERIODO|\s+VALOR|,|$)/i;
+                const matchPaciente = textoLimpio.match(patronNino);
 
-                if (matchPaciente && matchPaciente[1] && matchPaciente[1].trim().length > 3) {
+                if (matchPaciente && matchPaciente[1] && matchPaciente[1].trim().length > 2) {
                     nombrePacienteReal = matchPaciente[1].trim();
                 } else {
                     nombrePacienteReal = prompt("Por favor, ingresá el Nombre y Apellido del paciente:") || "Paciente Nuevo";
                 }
 
-                // 7. EXTRACCIÓN EXACTA DEL BLOQUE DE PRODUCTO / SERVICIO
+                // 7. DETALLE DEL PRODUCTO / SERVICIO
                 let descripcionLimpia = "";
-                const idxHonorarios = textoCompleto.indexOf("Honorarios");
+                const idxHonorarios = textoLimpio.indexOf("Honorarios");
 
                 if (idxHonorarios !== -1) {
-                    descripcionLimpia = textoCompleto.substring(idxHonorarios);
+                    descripcionLimpia = textoLimpio.substring(idxHonorarios);
                     
                     const corteUnidades = descripcionLimpia.search(/\d+[\.,]\d+\s+unidades/i);
                     const corteRes = descripcionLimpia.search(/unidades/i);
@@ -477,7 +499,7 @@
                 selectPaciente.value = pacientesActivos.length - 1;
                 actualizarDetalle();
 
-                nombreArchivo.textContent = `¡Factura procesada a la perfección para ${nombrePacienteReal}!`;
+                nombreArchivo.textContent = `¡Factura procesada con éxito para ${nombrePacienteReal}!`;
                 nombreArchivo.classList.add("text-emerald-600");
 
             } catch (error) {
