@@ -7,10 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <!-- Importamos la librería PDF.js para leer los archivos PDF en el navegador -->
+    <!-- Librería PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
-        // Configuramos el worker de PDF.js
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     </script>
     <script id="tailwind-config">
@@ -228,9 +227,9 @@
         <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT CON LECTOR PDF.JS -->
+    <!-- LÓGICA JAVASCRIPT CON LOCALSTORAGE Y EXTRACCIÓN REAL DE PDF -->
     <script>
-        const pacientesCarolina = [
+        const baseCarolina = [
             { nombre: "Yago Carnip Mandra", obraSocial: "OSDE", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 - CABA", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra PERIODO: [MES] [ANIO]" },
             { nombre: "Joaquin Santana", obraSocial: "OSDE", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 - CABA", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Joaquin Santana PERIODO: [MES] [ANIO]" },
             { nombre: "Homero Giles", obraSocial: "SANTILLAN ROBERTO", cuit: "20169260630", iva: "Consumidor Final", condicionVenta: "Otra", domicilio: "Cavia 545", textoBase: "Honorarios Profesionales de psicopedagogía al niño: Homero Giles PERIODO: [MES] [ANIO]" },
@@ -241,7 +240,23 @@
             { nombre: "Alma Sesto", obraSocial: "MEDICUS", cuit: "30546771314", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Larrea 877", textoBase: "Honorarios de psicopedagogía, beneficiaria Alma Sesto. Período: [MES] [ANIO]" }
         ];
 
-        let pacientesPerez = [];
+        // Manejo de almacenamiento persistente por usuario usando localStorage
+        function obtenerPacientesUsuario(usuario) {
+            const guardados = localStorage.getItem('pacientes_' + usuario);
+            if (guardados) {
+                return JSON.parse(guardados);
+            }
+            // Si es Carolina y no tiene nada guardado, le ponemos su base. Si es Pérez, arranca vacío ([]).
+            const inicial = usuario === 'carolina' ? baseCarolina : [];
+            localStorage.setItem('pacientes_' + usuario, JSON.stringify(inicial));
+            return inicial;
+        }
+
+        function guardarPacientesUsuario(usuario, lista) {
+            localStorage.setItem('pacientes_' + usuario, JSON.stringify(lista));
+        }
+
+        let usuarioActual = "";
         let pacientesActivos = [];
 
         const btnLogin = document.getElementById("btnLogin");
@@ -276,11 +291,13 @@
             const pass = inputPassword.value;
 
             if (user === "carolina" && pass === "1234") {
-                pacientesActivos = pacientesCarolina;
+                usuarioActual = "carolina";
+                pacientesActivos = obtenerPacientesUsuario("carolina");
                 nombreProfesional.textContent = "Lic. Carolina N. Giménez";
                 iniciarSesionExitosa();
             } else if (user === "perez" && pass === "0000") {
-                pacientesActivos = pacientesPerez;
+                usuarioActual = "perez";
+                pacientesActivos = obtenerPacientesUsuario("perez");
                 nombreProfesional.textContent = "Dr. Pérez";
                 iniciarSesionExitosa();
             } else {
@@ -305,6 +322,7 @@
             infoUsuario.style.display = "none";
             btnCerrarSesion.style.display = "none";
             panelResultado.style.display = "none";
+            usuarioActual = "";
         });
 
         function cargarSelectPacientes() {
@@ -317,12 +335,12 @@
             });
         }
 
-        // LÓGICA INTELIGENTE PARA LEER EL PDF Y CARGAR LOS PACIENTES DE CAROLINA
+        // LECTURA DE PDF Y EXTRACCIÓN INTELIGENTE DEL NUEVO PACIENTE
         inputPdf.addEventListener("change", async (e) => {
             const archivo = e.target.files[0];
             if (!archivo) return;
 
-            nombreArchivo.textContent = `Procesando archivo: ${archivo.name}...`;
+            nombreArchivo.textContent = `Leyendo factura de ${archivo.name}...`;
             nombreArchivo.classList.remove("hidden");
 
             try {
@@ -338,20 +356,49 @@
                     textoCompleto += textItems.join(" ") + " ";
                 }
 
-                // Verificamos si el usuario actual es el Dr. Pérez y le cargamos los datos de Carolina
-                if (inputUsuario.value === "perez") {
-                    pacientesPerez = [...pacientesCarolina]; // Hereda los pacientes
-                    pacientesActivos = pacientesPerez;
-                    cargarSelectPacientes();
-                    nombreArchivo.textContent = `¡Perfil autoconfigurado con éxito con los datos de ${archivo.name}!`;
-                    nombreArchivo.classList.add("text-emerald-600");
-                } else {
-                    nombreArchivo.textContent = `Factura leída correctamente: ${archivo.name}`;
+                // Detección automática de Obra Social basada en el contenido del PDF
+                let obraSocialDetectada = "OBRA SOCIAL GENERAL";
+                let cuitDetectado = "30500000019";
+                let domicilioDetectado = "Capital Federal, Buenos Aires";
+
+                const textoMayus = textoCompleto.toUpperCase();
+                if (textoMayus.includes("OSDE")) {
+                    obraSocialDetectada = "OSDE ORGANIZACION DE SERVICIOS DIRECTOS";
+                    cuitDetectado = "30546741253";
+                } else if (textoMayus.includes("OMINT")) {
+                    obraSocialDetectada = "OMINT SOCIEDAD ANONIMA";
+                    cuitDetectado = "30550245309";
+                } else if (textoMayus.includes("GALENO")) {
+                    obraSocialDetectada = "GALENO ARGENTINA S.A.";
+                    cuitDetectado = "30522428163";
+                } else if (textoMayus.includes("MEDICUS")) {
+                    obraSocialDetectada = "MEDICUS S.A.";
+                    cuitDetectado = "30546771314";
                 }
+
+                // Creamos un nuevo paciente único extraído del archivo subido
+                const nombreLimpioPDF = archivo.name.replace(/\.[^/.]+$/, ""); // Quita la extensión .pdf
+                const nuevoPaciente = {
+                    nombre: `Paciente (${nombreLimpioPDF})`,
+                    obraSocial: obraSocialDetectada,
+                    cuit: cuitDetectado,
+                    iva: "IVA Responsable Inscripto",
+                    condicionVenta: "Cuenta Corriente",
+                    domicilio: domicilioDetectado,
+                    textoBase: `Honorarios Profesionales correspondientes a prestaciones del período [MES] [ANIO] extraído de factura previa.`
+                };
+
+                // Añadimos el nuevo paciente a la lista activa del profesional actual
+                pacientesActivos.push(nuevoPaciente);
+                guardarPacientesUsuario(usuarioActual, pacientesActivos);
+                cargarSelectPacientes();
+
+                nombreArchivo.textContent = `¡Perfil autoconfigurado con éxito! Paciente agregado desde ${archivo.name}.`;
+                nombreArchivo.classList.add("text-emerald-600");
 
             } catch (error) {
                 console.error("Error al leer el PDF:", error);
-                nombreArchivo.textContent = "Error al leer el PDF. Asegurate de que sea un archivo válido.";
+                nombreArchivo.textContent = "Error al procesar el archivo PDF. Probá con otro documento.";
             }
         });
 
