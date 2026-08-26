@@ -227,26 +227,24 @@
         <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT CON LOCALSTORAGE Y EXTRACCIÓN REAL DE PDF -->
+    <!-- LÓGICA JAVASCRIPT CORREGIDA PARA EXTRAER NOMBRE REAL DE PACIENTE -->
     <script>
         const baseCarolina = [
-            { nombre: "Yago Carnip Mandra", obraSocial: "OSDE", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 - CABA", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra PERIODO: [MES] [ANIO]" },
-            { nombre: "Joaquin Santana", obraSocial: "OSDE", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 - CABA", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Joaquin Santana PERIODO: [MES] [ANIO]" },
-            { nombre: "Homero Giles", obraSocial: "SANTILLAN ROBERTO", cuit: "20169260630", iva: "Consumidor Final", condicionVenta: "Otra", domicilio: "Cavia 545", textoBase: "Honorarios Profesionales de psicopedagogía al niño: Homero Giles PERIODO: [MES] [ANIO]" },
-            { nombre: "Luna Bautista Mujis", obraSocial: "OMINT", cuit: "30550245309", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Carlos Pellegrini 1363", textoBase: "Honorarios profesionales de psicopedagogía al niño: Luna Bautista Mujis PERIODO: [MES] [ANIO]" },
-            { nombre: "Noah Telechea", obraSocial: "OSECAC", cuit: "30550273558", iva: "IVA Sujeto Exento", condicionVenta: "Cuenta Corriente", domicilio: "Moreno 648 - CABA", textoBase: "Honorarios de psicopedagogía al niño: Noah Telechea PERÍODO: [MES] [ANIO]" },
-            { nombre: "Ignacio Ferro Junco", obraSocial: "ASOC. TECNICOS DE VUELO", cuit: "30624957942", iva: "IVA Sujeto Exento", condicionVenta: "Otra", domicilio: "Víctor Hugo 369", textoBase: "Honorarios de psicopedagogía al niño: Ignacio Ferro Junco PERIODO: [MES] [ANIO]" },
-            { nombre: "Gonzalo Pineda", obraSocial: "GALENO", cuit: "30522428163", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Elvira Rawson 150", textoBase: "Honorarios de psicopedagogía al niño: Gonzalo Pineda PERIODO: [MES] [ANIO]" },
-            { nombre: "Alma Sesto", obraSocial: "MEDICUS", cuit: "30546771314", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Larrea 877", textoBase: "Honorarios de psicopedagogía, beneficiaria Alma Sesto. Período: [MES] [ANIO]" }
+            { nombre: "Yago Carnip Mandra", obraSocial: "OSDE", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 - CABA", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46 871 612, AF N°: 60929068103 PERIODO: [MES] [ANIO] Valor según nomenclador OSDE." },
+            { nombre: "Joaquin Santana", obraSocial: "OSDE", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 - CABA", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Joaquin Santana DNI: 54.702.333, AF N°: 615682214503 PERIODO: [MES] [ANIO] Valor según Nomenclador OSDE." },
+            { nombre: "Homero Giles", obraSocial: "SANTILLAN ROBERTO", cuit: "20169260630", iva: "Consumidor Final", condicionVenta: "Otra", domicilio: "Cavia 545", textoBase: "Honorarios Profesionales por la presentación de psicopedagogía al niño: Homero Giles DNI: 56076850 AF N°: 1-56076850 PERIODO: [MES] [ANIO] valor según nomenclador Nac. Res. Conjunta 2024" },
+            { nombre: "Luna Bautista Mujis", obraSocial: "OMINT", cuit: "30550245309", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Carlos Pellegrini 1363", textoBase: "Honorarios profesionales por la prestación de psicopedagogía al niño: Luna Bautista Mujis DNI: 56.629.620 AF: 4 340196 01 01 9 Período: [MES] [ANIO] Según resolución conjunta 8." },
+            { nombre: "Noah Telechea", obraSocial: "OSECAC", cuit: "30550273558", iva: "IVA Sujeto Exento", condicionVenta: "Cuenta Corriente", domicilio: "Moreno 648 - CABA", textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: NOAH TELECHEA, AFILIADO 56948636 PERÍODO: [MES] [ANIO] Resolución Conjunta 9/2024." },
+            { nombre: "Ignacio Ferro Junco", obraSocial: "ASOC. TECNICOS DE VUELO", cuit: "30624957942", iva: "IVA Sujeto Exento", condicionVenta: "Otra", domicilio: "Víctor Hugo 369", textoBase: "Honorarios Profesionales por la presentación de psicopedagogia al niño: Ignacio Ferro Junco DNI: 51.337.834 A.F.: 20-307223016/02 PERIODO: [MES] [ANIO] Valor según nomenclador Nac. Res. Conjunta 8/2022." },
+            { nombre: "Gonzalo Pineda", obraSocial: "GALENO", cuit: "30522428163", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Elvira Rawson 150", textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: Gonzalo Pineda DNI: 55181937 PERIODO: [MES] [ANIO] valor según nomenclador Nac. Res. Conjunta 8/2022" },
+            { nombre: "Alma Sesto", obraSocial: "MEDICUS", cuit: "30546771314", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Larrea 877", textoBase: "Honorarios profesionales de psicopedagogía, beneficiaria Alma Sesto. DNI: 53.288.131 Período: [MES] [ANIO]" }
         ];
 
-        // Manejo de almacenamiento persistente por usuario usando localStorage
         function obtenerPacientesUsuario(usuario) {
             const guardados = localStorage.getItem('pacientes_' + usuario);
             if (guardados) {
                 return JSON.parse(guardados);
             }
-            // Si es Carolina y no tiene nada guardado, le ponemos su base. Si es Pérez, arranca vacío ([]).
             const inicial = usuario === 'carolina' ? baseCarolina : [];
             localStorage.setItem('pacientes_' + usuario, JSON.stringify(inicial));
             return inicial;
@@ -335,12 +333,12 @@
             });
         }
 
-        // LECTURA DE PDF Y EXTRACCIÓN INTELIGENTE DEL NUEVO PACIENTE
+        // LECTURA DE PDF Y BÚSQUEDA DEL NOMBRE REAL DEL PACIENTE
         inputPdf.addEventListener("change", async (e) => {
             const archivo = e.target.files[0];
             if (!archivo) return;
 
-            nombreArchivo.textContent = `Leyendo factura de ${archivo.name}...`;
+            nombreArchivo.textContent = `Leyendo PDF para extraer datos...`;
             nombreArchivo.classList.remove("hidden");
 
             try {
@@ -356,44 +354,59 @@
                     textoCompleto += textItems.join(" ") + " ";
                 }
 
-                // Detección automática de Obra Social basada en el contenido del PDF
+                // Detección de Obra Social
                 let obraSocialDetectada = "OBRA SOCIAL GENERAL";
                 let cuitDetectado = "30500000019";
                 let domicilioDetectado = "Capital Federal, Buenos Aires";
 
-                const textoMayus = textoCompleto.toUpperCase();
-                if (textoMayus.includes("OSDE")) {
+                const textoUpper = textoCompleto.toUpperCase();
+                if (textoUpper.includes("OSDE")) {
                     obraSocialDetectada = "OSDE ORGANIZACION DE SERVICIOS DIRECTOS";
                     cuitDetectado = "30546741253";
-                } else if (textoMayus.includes("OMINT")) {
-                    obraSocialDetectada = "OMINT SOCIEDAD ANONIMA";
+                } else if (textoUpper.includes("OMINT")) {
+                    obraSocialDetectada = "OMINT S.A. DE SERVICIOS";
                     cuitDetectado = "30550245309";
-                } else if (textoMayus.includes("GALENO")) {
+                } else if (textoUpper.includes("GALENO")) {
                     obraSocialDetectada = "GALENO ARGENTINA S.A.";
                     cuitDetectado = "30522428163";
-                } else if (textoMayus.includes("MEDICUS")) {
+                } else if (textoUpper.includes("MEDICUS")) {
                     obraSocialDetectada = "MEDICUS S.A.";
                     cuitDetectado = "30546771314";
                 }
 
-                // Creamos un nuevo paciente único extraído del archivo subido
-                const nombreLimpioPDF = archivo.name.replace(/\.[^/.]+$/, ""); // Quita la extensión .pdf
+                // Extracción inteligente del NOMBRE DEL PACIENTE
+                let nombrePacienteReal = "";
+                
+                // Patrones de búsqueda comunes en descripciones de facturas médicas/psicopedagógicas
+                const patronNino = /(?:AL NIÑO|AL NIÑA|PACIENTE|BENEFICIARIO|BENEFICIARIA):\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?:DNI|AFILIADO|AF|PERIODO|VALOR|,|$)/i;
+                const match = textoCompleto.match(patronNino);
+
+                if (match && match[1] && match[1].trim().length > 3) {
+                    nombrePacienteReal = match[1].trim();
+                } else {
+                    // Si el PDF no tenía ese formato exacto de texto, le solicitamos confirmación
+                    nombrePacienteReal = prompt("Leímos la factura correctamente. Por favor, ingresá el Nombre y Apellido del paciente:") || "Paciente Nuevo";
+                }
+
                 const nuevoPaciente = {
-                    nombre: `Paciente (${nombreLimpioPDF})`,
+                    nombre: nombrePacienteReal,
                     obraSocial: obraSocialDetectada,
                     cuit: cuitDetectado,
                     iva: "IVA Responsable Inscripto",
                     condicionVenta: "Cuenta Corriente",
                     domicilio: domicilioDetectado,
-                    textoBase: `Honorarios Profesionales correspondientes a prestaciones del período [MES] [ANIO] extraído de factura previa.`
+                    textoBase: `Honorarios profesionales por la prestación correspondientes al paciente: ${nombrePacienteReal}. PERIODO: [MES] [ANIO]`
                 };
 
-                // Añadimos el nuevo paciente a la lista activa del profesional actual
                 pacientesActivos.push(nuevoPaciente);
                 guardarPacientesUsuario(usuarioActual, pacientesActivos);
                 cargarSelectPacientes();
 
-                nombreArchivo.textContent = `¡Perfil autoconfigurado con éxito! Paciente agregado desde ${archivo.name}.`;
+                // Seleccionar automáticamente al paciente recién agregado
+                selectPaciente.value = pacientesActivos.length - 1;
+                actualizarDetalle();
+
+                nombreArchivo.textContent = `¡Perfil autoconfigurado con éxito para ${nombrePacienteReal}!`;
                 nombreArchivo.classList.add("text-emerald-600");
 
             } catch (error) {
