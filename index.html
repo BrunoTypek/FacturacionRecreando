@@ -230,7 +230,7 @@
         <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT CON DOMICILIO COMPLETO Y SELECTOR LIMPIO -->
+    <!-- LÓGICA JAVASCRIPT CON LECTURA EXACTA DE DOMICILIO COMPLETO -->
     <script>
         const baseCarolina = [
             { nombre: "Yago Carnip Mandra", obraSocial: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46.871.612, AF N°: 60929068103 PERIODO: [MES] [ANIO] Valor según nomenclador OSDE." },
@@ -334,6 +334,7 @@
             pacientesActivos.forEach((paciente, index) => {
                 let option = document.createElement("option");
                 option.value = index;
+                // Dejamos únicamente el nombre del paciente y la obra social (sin rastro de Carolina)
                 option.textContent = `${paciente.nombre} (${paciente.obraSocial})`;
                 selectPaciente.appendChild(option);
             });
@@ -354,7 +355,7 @@
             }
         });
 
-        // LECTURA DE PDF ULTRA-PRECISA (DOMICILIO COMPLETO Y DATOS LIMPIOS)
+        // LECTURA DE PDF PERFECTA CON EXTRACCIÓN DE DOMICILIO COMPLETO
         inputPdf.addEventListener("change", async (e) => {
             const archivo = e.target.files[0];
             if (!archivo) return;
@@ -377,7 +378,7 @@
 
                 const textoLimpio = textoCompleto.replace(/\s+/g, ' ');
 
-                // 1. OBRA SOCIAL (Buscando la Razón Social del receptor, ignorando a Carolina)
+                // 1. OBRA SOCIAL / RAZÓN SOCIAL DEL RECEPTOR
                 let obraSocialExtraida = "";
                 const partesRazon = [...textoLimpio.matchAll(/(?:Apellido y Nombre \/ Razón Social|Razón Social):\s*([A-Z0-9ÁÉÍÓÚÑ\s\.\,\-]+?)(?=\s+Condición frente al IVA|\s+Domicilio|\s+CUIT|$)/gi)];
                 
@@ -420,13 +421,13 @@
                     else ivaExtraido = tempIva;
                 }
 
-                // 4. DOMICILIO COMPLETO DEL RECEPTOR (Capturando calle, altura y localidad entera)
+                // 4. DOMICILIO COMPLETO DEL RECEPTOR (Desde después de los dos puntos hasta el siguiente campo)
                 let domicilioExtraido = "";
-                const matchesDom = [...textoLimpio.matchAll(/Domicilio:\s*([A-Za-z0-9ÁÉÍÓÚáéíóúñÑ\s\.\,\-\/]+?)(?=\s+Condición de venta|\s+Código|\s+Producto|$)/gi)];
+                const matchesDom = [...textoLimpio.matchAll(/Domicilio:\s*([A-Za-z0-9ÁÉÍÓÚáéíóúñÑ\s\.\,\-\/\ºª°]+?)(?=\s+Condición de venta|\s+Código|\s+Producto|$)/gi)];
                 
                 for (let matchDom of matchesDom) {
                     let domCandidato = matchDom[1].trim();
-                    // El domicilio del receptor suele ser el segundo o el que no contiene "Pringles" (calle de Carolina)
+                    // Filtramos para ignorar el domicilio comercial de Carolina (Pringles)
                     if (!domCandidato.toUpperCase().includes("PRINGLES") && domCandidato.length > 5) {
                         domicilioExtraido = domCandidato;
                         break;
