@@ -13,87 +13,18 @@
             theme: {
                 extend: {
                     colors: {
-                        "on-tertiary": "#ffffff",
                         "surface": "#f3faff",
-                        "surface-container-high": "#d5ecf8",
-                        "primary-fixed-dim": "#a5c8ff",
-                        "surface-dim": "#c7dde9",
-                        "on-background": "#071e27",
-                        "surface-tint": "#005faf",
-                        "tertiary": "#505e68",
-                        "surface-container-low": "#e6f6ff",
-                        "secondary-container": "#a0f399",
-                        "surface-bright": "#f3faff",
-                        "surface-container": "#dbf1fe",
                         "surface-container-lowest": "#ffffff",
-                        "on-error-container": "#93000a",
-                        "surface-container-highest": "#cfe6f2",
-                        "on-error": "#ffffff",
-                        "on-secondary-fixed-variant": "#005312",
-                        "primary-fixed": "#d4e3ff",
-                        "inverse-on-surface": "#dff4ff",
-                        "tertiary-container": "#697781",
-                        "inverse-surface": "#1e333c",
-                        "on-secondary-container": "#217128",
-                        "primary": "#005dac",
-                        "on-secondary": "#ffffff",
-                        "tertiary-fixed": "#d6e5ef",
-                        "outline": "#717783",
-                        "error-container": "#ffdad6",
-                        "on-surface-variant": "#414752",
-                        "on-secondary-fixed": "#002204",
-                        "secondary-fixed": "#a3f69c",
-                        "inverse-primary": "#a5c8ff",
-                        "on-primary-fixed": "#001c3a",
+                        "surface-container": "#dbf1fe",
+                        "surface-container-low": "#e6f6ff",
                         "surface-variant": "#cfe6f2",
-                        "on-tertiary-fixed": "#0f1d25",
-                        "on-tertiary-container": "#fdfdff",
-                        "secondary-fixed-dim": "#88d982",
-                        "on-primary-fixed-variant": "#004786",
-                        "tertiary-fixed-dim": "#bac9d3",
-                        "on-primary-container": "#fffdff",
-                        "secondary": "#1b6d24",
-                        "on-tertiary-fixed-variant": "#3b4951",
+                        "primary": "#005dac",
                         "primary-container": "#1976d2",
-                        "outline-variant": "#c1c6d4",
-                        "background": "#f3faff",
                         "on-primary": "#ffffff",
                         "on-surface": "#071e27",
+                        "on-surface-variant": "#414752",
+                        "outline-variant": "#c1c6d4",
                         "error": "#ba1a1a"
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    spacing: {
-                        "xl": "40px",
-                        "base": "8px",
-                        "xs": "4px",
-                        "sm": "12px",
-                        "md": "16px",
-                        "gutter": "24px",
-                        "margin": "32px",
-                        "lg": "24px"
-                    },
-                    fontFamily: {
-                        "headline-md": ["Inter"],
-                        "body-lg": ["Inter"],
-                        "headline-lg-mobile": ["Inter"],
-                        "headline-lg": ["Inter"],
-                        "body-md": ["Inter"],
-                        "headline-sm": ["Inter"],
-                        "label-md": ["Inter"]
-                    },
-                    fontSize: {
-                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
-                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
-                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "600" }],
-                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
-                        "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
-                        "headline-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "500" }],
-                        "label-md": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }]
                     }
                 }
             }
@@ -106,211 +37,177 @@
 <body class="bg-surface text-on-surface min-h-screen flex flex-col antialiased">
     
     <!-- Header Navigation -->
-    <header class="bg-surface-container-lowest border-b border-surface-variant px-margin py-md flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center gap-sm">
+    <header class="bg-surface-container-lowest border-b border-surface-variant px-8 py-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
-            <h1 class="font-headline-md text-headline-md text-primary tracking-tight">FacturApp</h1>
+            <h1 class="text-xl font-bold text-primary tracking-tight">FacturApp</h1>
         </div>
         
-        <div class="flex items-center gap-sm">
-            <span id="infoUsuario" style="display: none;" class="font-label-md text-on-surface-variant flex items-center gap-2">
+        <div class="flex items-center gap-4">
+            <span id="infoUsuario" style="display: none;" class="text-sm font-medium text-on-surface-variant flex items-center gap-1.5">
                 👤 <span id="nombreProfesional"></span>
             </span>
-            <button id="btnCerrarSesion" style="display: none;" class="flex items-center gap-xs text-on-surface-variant hover:text-error transition-colors font-label-md text-label-md cursor-pointer">
+            <button id="btnCerrarSesion" style="display: none;" class="flex items-center gap-1 text-sm font-medium text-on-surface-variant hover:text-error transition-colors cursor-pointer">
                 <span class="material-symbols-outlined text-[18px]">logout</span> Salir
             </button>
         </div>
     </header>
 
     <!-- Main Content Canvas -->
-    <main class="flex-grow p-margin max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+    <main class="flex-grow p-8 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         <!-- Left Column: Context & Auth -->
-        <div class="lg:col-span-4 flex flex-col gap-gutter">
+        <div class="lg:col-span-4 flex flex-col gap-6">
             
             <!-- Iniciar Sesión Card -->
-            <section id="pantallaLogin" class="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-[0px_4px_20px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
-                <div class="flex items-center gap-sm mb-sm">
+            <section id="pantallaLogin" class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-sm">
+                <div class="flex items-center gap-2 mb-3">
                     <span class="material-symbols-outlined text-primary">account_circle</span>
-                    <h2 class="font-headline-sm text-headline-sm text-on-surface">Iniciar Sesión</h2>
+                    <h2 class="text-lg font-semibold text-on-surface">Iniciar Sesión</h2>
                 </div>
-                <p class="font-body-md text-body-md text-on-surface-variant mb-md">Seleccioná tu perfil para acceder al sistema.</p>
-                <form class="flex flex-col gap-sm">
+                <p class="text-sm text-on-surface-variant mb-4">Seleccioná tu perfil para acceder al sistema.</p>
+                <form class="flex flex-col gap-3">
                     <div>
-                        <label class="block font-label-md text-label-md text-on-surface mb-xs">Seleccionar Profesional:</label>
-                        <div class="relative">
-                            <select id="inputUsuario" class="w-full appearance-none bg-surface border border-outline-variant rounded-lg px-md py-sm font-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer">
-                                <option value="carolina">Lic. Carolina Noelia Giménez</option>
-                                <option value="perez">Dr. Pérez (Perfil de Prueba)</option>
-                            </select>
-                            <span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
-                        </div>
+                        <label class="block text-xs font-bold text-on-surface mb-1">Seleccionar Profesional:</label>
+                        <select id="inputUsuario" class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary transition-all cursor-pointer">
+                            <option value="carolina">Lic. Carolina Noelia Giménez</option>
+                            <option value="perez">Dr. Pérez (Perfil de Prueba)</option>
+                        </select>
                     </div>
                     <div>
-                        <label class="block font-label-md text-label-md text-on-surface mb-xs">Contraseña:</label>
-                        <input id="inputPassword" class="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm font-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-on-surface-variant/50" type="password" placeholder="Ingresá tu clave"/>
-                        <p id="errorLogin" class="font-label-md text-[10px] text-error mt-xs hidden">Contraseña incorrecta (Carolina: 1234 / Pérez: 0000).</p>
+                        <label class="block text-xs font-bold text-on-surface mb-1">Contraseña:</label>
+                        <input id="inputPassword" class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary transition-all placeholder:text-on-surface-variant/50" type="password" placeholder="Ingresá tu clave"/>
+                        <p id="errorLogin" class="text-[11px] text-error mt-1 hidden">Contraseña incorrecta (Carolina: 1234 / Pérez: 0000).</p>
                     </div>
-                    <button id="btnLogin" class="mt-sm w-full bg-primary text-on-primary font-label-md text-label-md h-[44px] rounded-lg flex items-center justify-center gap-xs hover:bg-primary-container hover:text-on-primary-container transition-colors active:scale-[0.98] cursor-pointer" type="button">
+                    <button id="btnLogin" class="mt-2 w-full bg-primary text-on-primary font-bold text-sm h-11 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container transition-colors cursor-pointer" type="button">
                         <span class="material-symbols-outlined text-[18px]">login</span> Ingresar al Sistema
                     </button>
                 </form>
             </section>
 
             <!-- Info Context Card -->
-            <section class="bg-surface-container rounded-xl p-lg border border-surface-variant relative overflow-hidden group">
-                <div class="absolute -right-10 -top-10 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors duration-500"></div>
-                <h3 class="font-headline-sm text-headline-sm text-primary mb-sm relative z-10">Facturación simple para el equipo interdisciplinario</h3>
-                <p class="font-body-md text-body-md text-on-surface-variant mb-md relative z-10">Agilizá la carga de tus prestaciones, consultá los nomencladores y enviá tus planillas a las Obras Sociales en un par de clics.</p>
-                <div class="flex flex-col gap-xs relative z-10">
-                    <a class="flex items-center justify-between bg-surface-container-lowest border border-outline-variant rounded-lg p-sm hover:border-primary hover:text-primary transition-colors text-on-surface font-body-md text-body-md" href="https://auth.afip.gob.ar/contribuyente_/login.xhtml" target="_blank">
-                        <span class="flex items-center gap-sm"><span class="material-symbols-outlined text-[18px]">account_balance</span> Ingresar a ARCA (Factura C)</span>
-                        <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+            <section class="bg-surface-container rounded-xl p-6 border border-surface-variant relative overflow-hidden">
+                <h3 class="text-base font-bold text-primary mb-2">Facturación simple para el equipo interdisciplinario</h3>
+                <p class="text-sm text-on-surface-variant mb-4">Agilizá la carga de tus prestaciones, consultá los nomencladores y enviá tus planillas a las Obras Sociales en un par de clics.</p>
+                <div class="flex flex-col gap-2">
+                    <a class="flex items-center justify-between bg-surface-container-lowest border border-outline-variant rounded-lg p-3 hover:border-primary transition-colors text-sm font-medium" href="https://auth.afip.gob.ar/contribuyente_/login.xhtml" target="_blank">
+                        <span class="flex items-center gap-2"><span class="material-symbols-outlined text-sm">account_balance</span> Ingresar a ARCA (Factura C)</span>
+                        <span class="material-symbols-outlined text-sm">open_in_new</span>
                     </a>
-                    <a class="flex items-center justify-between bg-surface-container-lowest border border-outline-variant rounded-lg p-sm hover:border-primary hover:text-primary transition-colors text-on-surface font-body-md text-body-md" href="instructivo.html">
-                        <span class="flex items-center gap-sm"><span class="material-symbols-outlined text-[18px]">menu_book</span> Ver Instructivo</span>
-                        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    <a class="flex items-center justify-between bg-surface-container-lowest border border-outline-variant rounded-lg p-3 hover:border-primary transition-colors text-sm font-medium" href="instructivo.html">
+                        <span class="flex items-center gap-2"><span class="material-symbols-outlined text-sm">menu_book</span> Ver Instructivo</span>
+                        <span class="material-symbols-outlined text-sm">chevron_right</span>
                     </a>
                 </div>
             </section>
         </div>
 
         <!-- Right Column: Main Billing Engine -->
-        <div class="lg:col-span-8 flex flex-col gap-gutter">
+        <div class="lg:col-span-8 flex flex-col gap-6">
             
             <!-- PANEL BLOQUEADO -->
-            <section id="mensajeBienvenida" class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm flex flex-col items-center justify-center h-full min-h-[500px] text-center p-xl">
-                <span class="material-symbols-outlined text-[64px] text-primary-fixed-dim mb-4">lock</span>
-                <h3 class="font-headline-md text-on-surface mb-2">Panel Protegido</h3>
-                <p class="font-body-md text-on-surface-variant max-w-sm">Por favor, iniciá sesión a la izquierda para visualizar y gestionar tu panel de facturación y pacientes.</p>
+            <section id="mensajeBienvenida" class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm flex flex-col items-center justify-center h-full min-h-[500px] text-center p-8">
+                <span class="material-symbols-outlined text-6xl text-primary/40 mb-4">lock</span>
+                <h3 class="text-xl font-bold text-on-surface mb-2">Panel Protegido</h3>
+                <p class="text-sm text-on-surface-variant max-w-sm">Por favor, iniciá sesión a la izquierda para visualizar y gestionar tu panel de facturación y pacientes.</p>
             </section>
 
             <!-- PANEL DE FACTURACIÓN -->
-            <section id="contenidoApp" style="display: none;" class="bg-surface-container-lowest rounded-xl p-xl border border-outline-variant shadow-[0px_4px_20px_rgba(0,0,0,0.02)] h-full">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-md mb-lg border-b border-surface-variant pb-md">
-                    <div>
-                        <h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Panel de Facturación</h2>
-                        <p class="font-body-md text-body-md text-on-surface-variant">Valores actualizados y gestión de pacientes asignados.</p>
-                    </div>
+            <section id="contenidoApp" style="display: none;" class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant shadow-sm h-full">
+                <div class="mb-6 border-b border-surface-variant pb-4">
+                    <h2 class="text-2xl font-bold text-on-surface mb-1">Panel de Facturación</h2>
+                    <p class="text-sm text-on-surface-variant">Valores actualizados y gestión de pacientes asignados.</p>
                 </div>
 
                 <!-- TARJETAS DE NOMENCLADORES -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-md mb-lg">
-                    <div class="bg-surface p-md rounded-lg border border-surface-variant">
-                        <span class="font-label-md text-label-md text-on-surface-variant">Valor OSDE</span>
-                        <p class="font-headline-sm text-primary font-bold text-xl mt-xs">$ 13.559,00</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-surface p-4 rounded-lg border border-surface-variant">
+                        <span class="text-xs font-semibold text-on-surface-variant">Valor OSDE</span>
+                        <p class="text-primary font-bold text-xl mt-1">$ 13.559,00</p>
                         <span class="text-[11px] text-on-surface-variant opacity-70">Actualización automática pendiente</span>
                     </div>
-                    <div class="bg-surface p-md rounded-lg border border-surface-variant">
-                        <span class="font-label-md text-label-md text-on-surface-variant">Otro Nomenclador</span>
-                        <p class="font-headline-sm text-primary font-bold text-xl mt-xs">$ 20.127,95</p>
+                    <div class="bg-surface p-4 rounded-lg border border-surface-variant">
+                        <span class="text-xs font-semibold text-on-surface-variant">Otro Nomenclador</span>
+                        <p class="text-primary font-bold text-xl mt-1">$ 20.127,95</p>
                         <span class="text-[11px] text-on-surface-variant opacity-70">Actualización automática pendiente</span>
                     </div>
                 </div>
                 
                 <!-- Fast Action: Upload PDF -->
-                <label for="inputPdf" class="mb-xl bg-surface-container-low border border-dashed border-primary-fixed-dim rounded-lg p-md flex flex-col items-center justify-center gap-sm cursor-pointer hover:bg-primary-fixed/20 transition-colors group">
-                    <div class="flex items-center gap-sm">
+                <label for="inputPdf" class="mb-6 bg-surface-container-low border border-dashed border-primary/40 rounded-lg p-5 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-primary/5 transition-colors group">
+                    <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">upload_file</span>
-                        <span class="font-body-md text-body-md text-primary font-medium">Haz clic aquí para subir tu factura PDF y autoconfigurar tu perfil</span>
+                        <span class="text-sm text-primary font-semibold">Haz clic aquí para subir tu factura PDF y autoconfigurar tu perfil</span>
                     </div>
                     <p id="nombreArchivo" class="text-xs text-on-surface-variant font-medium mt-1 hidden"></p>
                     <input type="file" id="inputPdf" accept="application/pdf" class="hidden">
                 </label>
 
                 <!-- Workflow Step 2 -->
-                <div class="space-y-lg">
-                    <div class="flex items-center gap-sm">
-                        <div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md">2</div>
-                        <h3 class="font-headline-sm text-headline-sm text-on-surface">Generar Detalle para Factura</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold">2</div>
+                        <h3 class="text-base font-semibold text-on-surface">Generar Detalle para Factura</h3>
                     </div>
 
-                    <!-- Selectors Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-md bg-surface p-md rounded-lg border border-surface-variant">
+                    <!-- Selectors Grid (Sin flechas repetidas) -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-surface p-4 rounded-lg border border-surface-variant">
                         <div>
-                            <label class="block font-label-md text-label-md text-on-surface mb-xs">Mes:</label>
-                            <div class="relative">
-                                <select id="selectorMes" class="w-full appearance-none bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-on-surface focus:outline-none focus:border-primary cursor-pointer transition-all">
-                                    <option value="ENERO">Enero</option>
-                                    <option value="FEBRERO">Febrero</option>
-                                    <option value="MARZO">Marzo</option>
-                                    <option value="ABRIL">Abril</option>
-                                    <option value="MAYO">Mayo</option>
-                                    <option value="JUNIO">Junio</option>
-                                    <option value="JULIO" selected>Julio</option>
-                                    <option value="AGOSTO">Agosto</option>
-                                    <option value="SEPTIEMBRE">Septiembre</option>
-                                    <option value="OCTUBRE">Octubre</option>
-                                    <option value="NOVIEMBRE">Noviembre</option>
-                                    <option value="DICIEMBRE">Diciembre</option>
-                                </select>
-                                <span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
-                            </div>
+                            <label class="block text-xs font-bold text-on-surface mb-1">Mes:</label>
+                            <select id="selectorMes" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer">
+                                <option value="ENERO">Enero</option>
+                                <option value="FEBRERO">Febrero</option>
+                                <option value="MARZO">Marzo</option>
+                                <option value="ABRIL">Abril</option>
+                                <option value="MAYO">Mayo</option>
+                                <option value="JUNIO">Junio</option>
+                                <option value="JULIO" selected>Julio</option>
+                                <option value="AGOSTO">Agosto</option>
+                                <option value="SEPTIEMBRE">Septiembre</option>
+                                <option value="OCTUBRE">Octubre</option>
+                                <option value="NOVIEMBRE">Noviembre</option>
+                                <option value="DICIEMBRE">Diciembre</option>
+                            </select>
                         </div>
                         <div>
-                            <label class="block font-label-md text-label-md text-on-surface mb-xs">Año:</label>
-                            <div class="relative">
-                                <select id="selectorAnio" class="w-full appearance-none bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-on-surface focus:outline-none focus:border-primary cursor-pointer transition-all">
-                                    <option value="2025">2025</option>
-                                    <option value="2026" selected>2026</option>
-                                    <option value="2027">2027</option>
-                                </select>
-                                <span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
-                            </div>
+                            <label class="block text-xs font-bold text-on-surface mb-1">Año:</label>
+                            <select id="selectorAnio" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer">
+                                <option value="2025">2025</option>
+                                <option value="2026" selected>2026</option>
+                                <option value="2027">2027</option>
+                            </select>
                         </div>
-                        <div class="md:col-span-1">
-                            <label class="block font-label-md text-label-md text-on-surface mb-xs">Paciente / Obra Social:</label>
-                            <div class="relative">
-                                <select id="selectorPacientes" class="w-full appearance-none bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-on-surface focus:outline-none focus:border-primary cursor-pointer transition-all">
-                                    <option value="">-- Seleccionar Paciente --</option>
-                                </select>
-                                <span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
-                            </div>
+                        <div>
+                            <label class="block text-xs font-bold text-on-surface mb-1">Paciente / Obra Social:</label>
+                            <select id="selectorPacientes" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer">
+                                <option value="">-- Seleccionar Paciente --</option>
+                            </select>
                         </div>
                     </div>
 
-                    <!-- Envoltorio oculto de resultados que aparece al elegir paciente -->
-                    <div id="resultadoDetalle" style="display: none;" class="space-y-lg transition-all">
-                        <!-- Extracted Details Display -->
-                        <div class="bg-surface-container rounded-lg p-lg border border-outline-variant grid grid-cols-1 sm:grid-cols-2 gap-y-sm gap-x-lg">
-                            <div class="flex flex-col border-b border-surface-variant pb-xs sm:border-0 sm:pb-0">
-                                <span class="font-label-md text-label-md text-on-surface-variant">Obra Social:</span>
-                                <span id="txtObraSocial" class="font-body-md text-body-md text-on-surface font-medium min-h-[24px]"></span>
-                            </div>
-                            <div class="flex flex-col border-b border-surface-variant pb-xs sm:border-0 sm:pb-0">
-                                <span class="font-label-md text-label-md text-on-surface-variant">CUIT:</span>
-                                <span id="txtCuit" class="font-body-md text-body-md text-on-surface font-medium min-h-[24px]"></span>
-                            </div>
-                            <div class="flex flex-col border-b border-surface-variant pb-xs sm:border-0 sm:pb-0">
-                                <span class="font-label-md text-label-md text-on-surface-variant">Condición IVA:</span>
-                                <span id="txtIva" class="font-body-md text-body-md text-on-surface font-medium min-h-[24px]"></span>
-                            </div>
-                            <div class="flex flex-col border-b border-surface-variant pb-xs sm:border-0 sm:pb-0">
-                                <span class="font-label-md text-label-md text-on-surface-variant">Condición de Venta:</span>
-                                <span id="txtVenta" class="font-body-md text-body-md text-on-surface font-medium min-h-[24px]"></span>
-                            </div>
-                            <div class="flex flex-col sm:col-span-2">
-                                <span class="font-label-md text-label-md text-on-surface-variant">Domicilio:</span>
-                                <span id="txtDomicilio" class="font-body-md text-body-md text-on-surface font-medium min-h-[24px]"></span>
-                            </div>
+                    <!-- Resultado -->
+                    <div id="resultadoDetalle" style="display: none;" class="space-y-4 pt-2">
+                        <div class="bg-surface-container rounded-lg p-5 border border-outline-variant grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                            <div><strong>Obra Social:</strong> <span id="txtObraSocial" class="font-medium"></span></div>
+                            <div><strong>CUIT:</strong> <span id="txtCuit" class="font-medium"></span></div>
+                            <div><strong>Condición IVA:</strong> <span id="txtIva" class="font-medium"></span></div>
+                            <div><strong>Condición de Venta:</strong> <span id="txtVenta" class="font-medium"></span></div>
+                            <div class="sm:col-span-2"><strong>Domicilio:</strong> <span id="txtDomicilio" class="font-medium"></span></div>
                         </div>
 
-                        <!-- Generated Detail Payload -->
-                        <div class="flex flex-col gap-xs">
-                            <label class="font-label-md text-label-md text-on-surface">Detalle para la factura:</label>
-                            <div id="txtPlantilla" class="w-full min-h-[120px] bg-surface-container-lowest border-2 border-primary-fixed-dim rounded-lg p-md font-body-md text-body-md text-on-surface relative shadow-inner whitespace-pre-wrap"></div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-bold text-on-surface">Detalle para la factura:</label>
+                            <div id="txtPlantilla" class="w-full min-h-[100px] bg-surface-container-lowest border-2 border-primary/30 rounded-lg p-3 text-sm font-mono whitespace-pre-wrap"></div>
                         </div>
 
                         <!-- Action Bar -->
-                        <div class="flex flex-col sm:flex-row gap-sm pt-sm">
-                            <button id="btnCopiar" class="flex-1 bg-surface-container-lowest border border-outline text-on-surface font-label-md text-label-md h-[44px] rounded-lg flex items-center justify-center gap-xs hover:bg-surface-container hover:border-primary transition-all active:scale-[0.98] cursor-pointer relative overflow-hidden group">
-                                <span class="material-symbols-outlined text-[18px] group-hover:text-primary transition-colors">content_copy</span>
-                                Copiar Detalle al Portapapeles
-                                <span id="mensajeCopiado" class="absolute inset-0 bg-secondary/10 flex items-center justify-center text-secondary font-bold opacity-0 transition-opacity duration-300 pointer-events-none">¡Copiado con éxito!</span>
+                        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                            <button id="btnCopiar" class="flex-1 bg-surface-container-lowest border border-outline-variant text-on-surface font-semibold text-sm h-11 rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container transition-all cursor-pointer relative overflow-hidden">
+                                <span class="material-symbols-outlined text-sm">content_copy</span> Copiar Detalle
+                                <span id="mensajeCopiado" class="absolute inset-0 bg-emerald-50 text-emerald-700 font-bold flex items-center justify-center opacity-0 transition-opacity pointer-events-none">¡Copiado con éxito!</span>
                             </button>
-                            <button class="flex-1 bg-primary text-on-primary font-label-md text-label-md h-[44px] rounded-lg flex items-center justify-center gap-xs hover:bg-primary-container hover:text-on-primary-container transition-colors active:scale-[0.98] cursor-pointer">
-                                <span class="material-symbols-outlined text-[18px]">mail</span>
-                                Redactar Correo
+                            <button class="flex-1 bg-primary text-on-primary font-semibold text-sm h-11 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container transition-colors cursor-pointer">
+                                <span class="material-symbols-outlined text-sm">mail</span> Redactar Correo
                             </button>
                         </div>
                     </div>
@@ -321,103 +218,21 @@
     </main>
 
     <!-- Footer -->
-    <footer class="mt-auto border-t border-surface-variant py-md text-center bg-surface-container-lowest">
-        <p class="font-body-md text-[13px] text-on-surface-variant">
-            <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
-        </p>
+    <footer class="mt-auto border-t border-surface-variant py-4 text-center bg-surface-container-lowest text-xs text-on-surface-variant">
+        <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
     </footer>
 
-    <!-- LOGICA JAVASCRIPT -->
+    <!-- LÓGICA JAVASCRIPT -->
     <script>
         const pacientesCarolina = [
-            {
-                nombre: "Yago Carnip Mandra",
-                dni: "46.871.612",
-                afiliado: "60929068103",
-                obraSocial: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS",
-                cuit: "30546741253",
-                iva: "IVA Responsable Inscripto",
-                condicionVenta: "Cuenta Corriente",
-                domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires",
-                textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46 871 612, AF N°: 60929068103 PERIODO: [MES] [ANIO] Valor según nomenclador OSDE."
-            },
-            {
-                nombre: "Joaquin Santana",
-                dni: "54.702.333",
-                afiliado: "615682214503",
-                obraSocial: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS",
-                cuit: "30546741253",
-                iva: "IVA Responsable Inscripto",
-                condicionVenta: "Cuenta Corriente",
-                domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires",
-                textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Joaquin Santana DNI: 54.702.333, AF N°: 615682214503 PERIODO: [MES] [ANIO] Valor según Nomenclador OSDE."
-            },
-            {
-                nombre: "Homero Giles",
-                dni: "56.076.850",
-                afiliado: "1-56076850",
-                obraSocial: "SANTILLAN ROBERTO LOMBARDO",
-                cuit: "20169260630",
-                iva: "Consumidor Final",
-                condicionVenta: "Otra",
-                domicilio: "Cavia 545",
-                textoBase: "Honorarios Profesionales por la presentación de psicopedagogía al niño: Homero Giles DNI: 56076850 AF N°: 1-56076850 PERIODO: [MES] [ANIO] valor según nomenclador Nac. Res. Conjunta 2024"
-            },
-            {
-                nombre: "Luna Bautista Mujis",
-                dni: "56.629.620",
-                afiliado: "4 340196 01 01 9",
-                obraSocial: "OMINT SOCIEDAD ANONIMA DE SERVICIOS",
-                cuit: "30550245309",
-                iva: "IVA Responsable Inscripto",
-                condicionVenta: "Otra",
-                domicilio: "Carlos Pellegrini 1363 Piso:9 - Capital Federal, Buenos Aires",
-                textoBase: "Honorarios profesionales por la prestación de psicopedagogía al niño: Luna Bautista Mujis DNI: 56.629.620 AF: 4 340196 01 01 9 Período: [MES] [ANIO] Según resolución conjunta 8."
-            },
-            {
-                nombre: "Noah Telechea",
-                dni: "No especificado",
-                afiliado: "56948636",
-                obraSocial: "OBRA SOCIAL DE LOS EMPLEADOS DE COMERCIO Y ACTIVIDADES CIVILES",
-                cuit: "30550273558",
-                iva: "IVA Sujeto Exento",
-                condicionVenta: "Cuenta Corriente",
-                domicilio: "Moreno 648 - Capital Federal, Buenos Aires",
-                textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: NOAH TELECHEA, AFILIADO 56948636 PERÍODO: [MES] [ANIO] Resolución Conjunta 9/2024."
-            },
-            {
-                nombre: "Ignacio Ferro Junco",
-                dni: "51.337.834",
-                afiliado: "20-307223016/02",
-                obraSocial: "OBRA SOCIAL DE TECNICOS DE VUELO DE LINEAS AEREAS",
-                cuit: "30624957942",
-                iva: "IVA Sujeto Exento",
-                condicionVenta: "Otra",
-                domicilio: "Víctor Hugo 369 - Capital Federal, Buenos Aires",
-                textoBase: "Honorarios Profesionales por la presentación de psicopedagogia al niño: Ignacio Ferro Junco DNI: 51.337.834 A.F.: 20-307223016/02 PERIODO: [MES] [ANIO] Valor según nomenclador Nac. Res. Conjunta 8/2022."
-            },
-            {
-                nombre: "Gonzalo Pineda",
-                dni: "55.181.937",
-                afiliado: "No especificado",
-                obraSocial: "GALENO ARGENTINA SOCIEDAD ANONIMA",
-                cuit: "30522428163",
-                iva: "IVA Responsable Inscripto",
-                condicionVenta: "Otra",
-                domicilio: "Elvira Rawson de Dellepiane 150 - Capital Federal, Buenos Aires",
-                textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: Gonzalo Pineda DNI: 55181937 PERIODO: [MES] [ANIO] valor según nomenclador Nac. Res. Conjunta 8/2022"
-            },
-            {
-                nombre: "Alma Sesto",
-                dni: "53.288.131",
-                afiliado: "No especificado",
-                obraSocial: "MEDICUS SOCIEDAD ANONIMA DE ASISTENCIA MEDICA Y CIENTIFICA",
-                cuit: "30546771314",
-                iva: "IVA Responsable Inscripto",
-                condicionVenta: "Otra",
-                domicilio: "Larrea 877 Piso:06 - Capital Federal, Buenos Aires",
-                textoBase: "Honorarios profesionales de psicopedagogía, beneficiaria Alma Sesto. DNI: 53.288.131 Período: [MES] [ANIO]"
-            }
+            { nombre: "Yago Carnip Mandra", obraSocial: "OSDE", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 - CABA", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra PERIODO: [MES] [ANIO]" },
+            { nombre: "Joaquin Santana", obraSocial: "OSDE", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 - CABA", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Joaquin Santana PERIODO: [MES] [ANIO]" },
+            { nombre: "Homero Giles", obraSocial: "SANTILLAN ROBERTO", cuit: "20169260630", iva: "Consumidor Final", condicionVenta: "Otra", domicilio: "Cavia 545", textoBase: "Honorarios Profesionales de psicopedagogía al niño: Homero Giles PERIODO: [MES] [ANIO]" },
+            { nombre: "Luna Bautista Mujis", obraSocial: "OMINT", cuit: "30550245309", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Carlos Pellegrini 1363", textoBase: "Honorarios profesionales de psicopedagogía al niño: Luna Bautista Mujis PERIODO: [MES] [ANIO]" },
+            { nombre: "Noah Telechea", obraSocial: "OSECAC", cuit: "30550273558", iva: "IVA Sujeto Exento", condicionVenta: "Cuenta Corriente", domicilio: "Moreno 648 - CABA", textoBase: "Honorarios de psicopedagogía al niño: Noah Telechea PERÍODO: [MES] [ANIO]" },
+            { nombre: "Ignacio Ferro Junco", obraSocial: "ASOC. TECNICOS DE VUELO", cuit: "30624957942", iva: "IVA Sujeto Exento", condicionVenta: "Otra", domicilio: "Víctor Hugo 369", textoBase: "Honorarios de psicopedagogía al niño: Ignacio Ferro Junco PERIODO: [MES] [ANIO]" },
+            { nombre: "Gonzalo Pineda", obraSocial: "GALENO", cuit: "30522428163", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Elvira Rawson 150", textoBase: "Honorarios de psicopedagogía al niño: Gonzalo Pineda PERIODO: [MES] [ANIO]" },
+            { nombre: "Alma Sesto", obraSocial: "MEDICUS", cuit: "30546771314", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Larrea 877", textoBase: "Honorarios de psicopedagogía, beneficiaria Alma Sesto. Período: [MES] [ANIO]" }
         ];
 
         let pacientesPerez = [];
