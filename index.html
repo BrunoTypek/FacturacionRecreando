@@ -230,7 +230,7 @@
         <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT CORREGIDA CON EXTRACCIÓN ZONAL -->
+    <!-- LÓGICA JAVASCRIPT CON DOMICILIO COMPLETO Y SELECTOR LIMPIO -->
     <script>
         const baseCarolina = [
             { nombre: "Yago Carnip Mandra", obraSocial: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46.871.612, AF N°: 60929068103 PERIODO: [MES] [ANIO] Valor según nomenclador OSDE." },
@@ -354,7 +354,7 @@
             }
         });
 
-        // PARSEO DE PDF OPTIMIZADO Y ROBUSTO
+        // LECTURA DE PDF ULTRA-PRECISA (DOMICILIO COMPLETO Y DATOS LIMPIOS)
         inputPdf.addEventListener("change", async (e) => {
             const archivo = e.target.files[0];
             if (!archivo) return;
@@ -375,28 +375,21 @@
                     textoCompleto += textItems.join(" ") + " ";
                 }
 
-                // Normalizamos espacios
                 const textoLimpio = textoCompleto.replace(/\s+/g, ' ');
 
-                // 1. Detección de la OBRA SOCIAL / RAZÓN SOCIAL RECEPTORA
+                // 1. OBRA SOCIAL (Buscando la Razón Social del receptor, ignorando a Carolina)
                 let obraSocialExtraida = "";
-                const matchRazon = textoLimpio.match(/Razón Social:\s*([^:]+?)(?=\s+Condición frente al IVA|\s+Domicilio|\s+CUIT|$)/i);
+                const partesRazon = [...textoLimpio.matchAll(/(?:Apellido y Nombre \/ Razón Social|Razón Social):\s*([A-Z0-9ÁÉÍÓÚÑ\s\.\,\-]+?)(?=\s+Condición frente al IVA|\s+Domicilio|\s+CUIT|$)/gi)];
                 
-                if (matchRazon && matchRazon[1]) {
-                    let candidata = matchRazon[1].trim();
-                    // Si capturó al emisor ("GIMENEZ CAROLINA NOELIA"), buscamos la segunda ocurrencia que es el receptor
-                    if (candidata.toUpperCase().includes("GIMENEZ") || candidata.toUpperCase().includes("CAROLINA")) {
-                        const segundaOcurrencia = textoLimpio.match(/Apellido y Nombre \/ Razón Social:\s*([A-Z0-9ÁÉÍÓÚÑ\s\.\,\-]+?)(?=\s+Condición frente al IVA|\s+Domicilio|$)/i);
-                        if (segundaOcurrencia && segundaOcurrencia[1]) {
-                            obraSocialExtraida = segundaOcurrencia[1].trim();
-                        }
-                    } else {
-                        obraSocialExtraida = candidata;
+                for (let match of partesRazon) {
+                    let candidata = match[1].trim();
+                    if (!candidata.toUpperCase().includes("GIMENEZ") && !candidata.toUpperCase().includes("CAROLINA") && candidata.length > 3) {
+                        obraSocialExtraida = candidata.replace(/CUIT:.*$/, '').trim();
+                        break;
                     }
                 }
 
-                // Si no se ubicó por etiqueta exacta, buscamos patrones de obras sociales típicas en el texto
-                if (!obraSocialExtraida || obraSocialExtraida.length < 3) {
+                if (!obraSocialExtraida) {
                     const txtUpper = textoLimpio.toUpperCase();
                     if (txtUpper.includes("TECNICOS DE VUELO")) obraSocialExtraida = "OBRA SOCIAL DE TECNICOS DE VUELO DE LINEAS AEREAS";
                     else if (txtUpper.includes("OSDE")) obraSocialExtraida = "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS";
@@ -408,7 +401,7 @@
                     else obraSocialExtraida = "OBRA SOCIAL GENERAL";
                 }
 
-                // 2. EXTRACCIÓN DEL CUIT DEL RECEPTOR
+                // 2. CUIT DEL RECEPTOR
                 let cuitExtraido = "30500000019";
                 const matchesCuit = [...textoLimpio.matchAll(/CUIT:\s*(\d{2}[-\s]?\d{8}[-\s]?\d)/gi)];
                 if (matchesCuit.length >= 2) {
@@ -417,26 +410,32 @@
                     cuitExtraido = matchesCuit[0][1].replace(/[-\s]/g, '');
                 }
 
-                // 3. CONDICIÓN IVA RECEPTOR
+                // 3. CONDICIÓN IVA
                 let ivaExtraido = "IVA Responsable Inscripto";
                 const matchIva = textoLimpio.match(/Condición frente al IVA:\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?=\s+Domicilio|\s+CUIT|\s+Condición de venta|$)/i);
                 if (matchIva && matchIva[1]) {
                     const tempIva = matchIva[1].trim();
                     if (tempIva.toUpperCase().includes("EXENTO")) ivaExtraido = "IVA Sujeto Exento";
                     else if (tempIva.toUpperCase().includes("CONSUMIDOR")) ivaExtraido = "Consumidor Final";
-                    else if (tempIva.toUpperCase().includes("INSCRIPTO")) ivaExtraido = "IVA Responsable Inscripto";
                     else ivaExtraido = tempIva;
                 }
 
-                // 4. EXTRACCIÓN DEL DOMICILIO COMPLETO DEL RECEPTOR
+                // 4. DOMICILIO COMPLETO DEL RECEPTOR (Capturando calle, altura y localidad entera)
                 let domicilioExtraido = "";
                 const matchesDom = [...textoLimpio.matchAll(/Domicilio:\s*([A-Za-z0-9ÁÉÍÓÚáéíóúñÑ\s\.\,\-\/]+?)(?=\s+Condición de venta|\s+Código|\s+Producto|$)/gi)];
-                if (matchesDom.length >= 2) {
-                    domicilioExtraido = matchesDom[1][1].trim();
-                } else if (matchesDom.length === 1) {
-                    domicilioExtraido = matchesDom[0][1].trim();
+                
+                for (let matchDom of matchesDom) {
+                    let domCandidato = matchDom[1].trim();
+                    // El domicilio del receptor suele ser el segundo o el que no contiene "Pringles" (calle de Carolina)
+                    if (!domCandidato.toUpperCase().includes("PRINGLES") && domCandidato.length > 5) {
+                        domicilioExtraido = domCandidato;
+                        break;
+                    }
                 }
-                if (!domicilioExtraido || domicilioExtraido.length < 5) {
+                if (!domicilioExtraido && matchesDom.length > 0) {
+                    domicilioExtraido = matchesDom[matchesDom.length - 1][1].trim();
+                }
+                if (!domicilioExtraido) {
                     domicilioExtraido = "Capital Federal, Buenos Aires";
                 }
 
