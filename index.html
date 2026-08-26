@@ -75,7 +75,7 @@
                     <div>
                         <label class="block text-xs font-bold text-on-surface mb-1">Seleccionar Profesional:</label>
                         <select id="inputUsuario" class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary transition-all cursor-pointer">
-                            <option value="">-- Seleccione el/la profesional --</option>
+                            <option value="">-- Seleccione el profesional --</option>
                             <option value="carolina">Lic. Carolina Noelia Giménez</option>
                             <option value="perez">Dr. Pérez (Perfil Nuevo)</option>
                         </select>
@@ -230,7 +230,7 @@
         <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT CON EXTRACCIÓN AMPLIADA Y SELECTOR LIMPIO -->
+    <!-- LÓGICA JAVASCRIPT CON EXTRACCIÓN LIMPIA DE PRODUCTO/SERVICIO -->
     <script>
         const baseCarolina = [
             { nombre: "Yago Carnip Mandra", obraSocial: "OSDE", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 - CABA", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46.871.612, AF N°: 60929068103 PERIODO: [MES] [ANIO] Valor según nomenclador OSDE." },
@@ -325,7 +325,7 @@
             btnCerrarSesion.style.display = "none";
             panelResultado.style.display = "none";
             btnEliminarPaciente.style.display = "none";
-            inputUsuario.value = ""; // Resetea el selector de profesional
+            inputUsuario.value = "";
             usuarioActual = "";
         });
 
@@ -354,12 +354,12 @@
             }
         });
 
-        // LECTURA DE PDF AMPLIADA PARA CAPTURAR TODO EL DETALLE
+        // LECTURA DE PDF FILTRANDO EXACTAMENTE EL BLOQUE DE PRODUCTO/SERVICIO
         inputPdf.addEventListener("change", async (e) => {
             const archivo = e.target.files[0];
             if (!archivo) return;
 
-            nombreArchivo.textContent = `Leyendo factura completa...`;
+            nombreArchivo.textContent = `Leyendo detalle de prestación del PDF...`;
             nombreArchivo.classList.remove("hidden");
 
             try {
@@ -394,7 +394,7 @@
                     cuitDetectado = "30546771314";
                 }
 
-                // Extracción del Nombre
+                // Extracción inteligente del NOMBRE DEL PACIENTE
                 let nombrePacienteReal = "";
                 const patronNino = /(?:AL NIÑO|AL NIÑA|PACIENTE|BENEFICIARIO|BENEFICIARIA):\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?:DNI|AFILIADO|AF|PERIODO|VALOR|,|$)/i;
                 const match = textoCompleto.match(patronNino);
@@ -402,15 +402,29 @@
                 if (match && match[1] && match[1].trim().length > 3) {
                     nombrePacienteReal = match[1].trim();
                 } else {
-                    nombrePacienteReal = prompt("Leímos la factura correctamente. Ingresá el Nombre y Apellido del paciente:") || "Paciente Nuevo";
+                    nombrePacienteReal = prompt("Leímos la factura. Ingresá el Nombre y Apellido del paciente:") || "Paciente Nuevo";
                 }
 
-                // Extracción ampliada de la descripción/detalle que figura en la factura
-                let detalleFacturaExtraido = textoCompleto.trim();
-                if (detalleFacturaExtraido.length > 250) {
-                    // Si el texto es muy largo, limpiamos los espacios múltiples y seleccionamos un extracto rico y representativo
-                    detalleFacturaExtraido = detalleFacturaExtraido.replace(/\s+/g, ' ');
+                // Búsqueda específica del bloque de Descripción / Producto / Servicio para evitar los datos fiscales
+                let descripcionLimpia = "";
+                const idxProd = textoCompleto.indexOf("Producto");
+                const idxServ = textoCompleto.indexOf("Servicio");
+                const idxHonorarios = textoCompleto.indexOf("Honorarios");
+
+                if (idxHonorarios !== -1) {
+                    // Cortamos desde la palabra "Honorarios" para quedarnos justo con el texto exacto de la prestación
+                    descripcionLimpia = textoCompleto.substring(idxHonorarios);
+                    // Si el texto sigue con cosas administrativas posteriores, las acotamos
+                    const corteFinal = descripcionLimpia.indexOf("Subtotal");
+                    if (corteFinal !== -1) {
+                        descripcionLimpia = descripcionLimpia.substring(0, corteFinal);
+                    }
+                } else {
+                    descripcionLimpia = `Honorarios profesionales por la prestación de psicopedagogía al niño: ${nombrePacienteReal} PERIODO: [MES] [ANIO]`;
                 }
+
+                // Limpieza de espacios múltiples
+                descripcionLimpia = descripcionLimpia.replace(/\s+/g, ' ').trim();
 
                 const nuevoPaciente = {
                     nombre: nombrePacienteReal,
@@ -419,7 +433,7 @@
                     iva: "IVA Responsable Inscripto",
                     condicionVenta: "Cuenta Corriente",
                     domicilio: domicilioDetectado,
-                    textoBase: `Honorarios profesionales por prestaciones correspondientes a ${nombrePacienteReal}. PERIODO: [MES] [ANIO]. Detalle: ${detalleFacturaExtraido.substring(0, 180)}...`
+                    textoBase: descripcionLimpia.replace(/JULIO\s+2026/gi, "[MES] [ANIO]") // Normaliza fechas para el selector
                 };
 
                 pacientesActivos.push(nuevoPaciente);
@@ -429,7 +443,7 @@
                 selectPaciente.value = pacientesActivos.length - 1;
                 actualizarDetalle();
 
-                nombreArchivo.textContent = `¡Perfil autoconfigurado con éxito para ${nombrePacienteReal} con detalle completo!`;
+                nombreArchivo.textContent = `¡Perfil autoconfigurado con éxito para ${nombrePacienteReal} con detalle exacto!`;
                 nombreArchivo.classList.add("text-emerald-600");
 
             } catch (error) {
@@ -456,7 +470,7 @@
             txtVenta.textContent = p.condicionVenta;
             txtDomicilio.textContent = p.domicilio;
             
-            let textoFinal = p.textoBase.replace("[MES]", mesSeleccionado).replace("[ANIO]", anioSeleccionado);
+            let textoFinal = p.textoBase.replace(/\[MES\]/g, mesSeleccionado).replace(/\[ANIO\]/g, anioSeleccionado);
             txtPlantilla.textContent = textoFinal;
 
             panelResultado.style.display = "block";
