@@ -230,7 +230,7 @@
         <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT CON CORTE QUIRÚRGICO DE UNIDADES/PRECIOS -->
+    <!-- LÓGICA JAVASCRIPT CON EXTRACCIÓN PRECISA DE DATOS FISCALES DEL RECEPTOR -->
     <script>
         const baseCarolina = [
             { nombre: "Yago Carnip Mandra", obraSocial: "OSDE", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 - CABA", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46.871.612, AF N°: 60929068103 PERIODO: [MES] [ANIO] Valor según nomenclador OSDE." },
@@ -354,12 +354,12 @@
             }
         });
 
-        // LECTURA DE PDF Y CORTE QUIRÚRGICO DE PRECIOS/UNIDADES
+        // LECTURA INTELIGENTE Y EXACTA DE DATOS DESDE LA FACTURA PDF
         inputPdf.addEventListener("change", async (e) => {
             const archivo = e.target.files[0];
             if (!archivo) return;
 
-            nombreArchivo.textContent = `Leyendo prestación limpia del PDF...`;
+            nombreArchivo.textContent = `Analizando datos de la factura PDF...`;
             nombreArchivo.classList.remove("hidden");
 
             try {
@@ -375,44 +375,63 @@
                     textoCompleto += textItems.join(" ") + " ";
                 }
 
-                let obraSocialDetectada = "OBRA SOCIAL GENERAL";
-                let cuitDetectado = "30500000019";
-                let domicilioDetectado = "Capital Federal, Buenos Aires";
-
-                const textoUpper = textoCompleto.toUpperCase();
-                if (textoUpper.includes("OSDE")) {
-                    obraSocialDetectada = "OSDE ORGANIZACION DE SERVICIOS DIRECTOS";
-                    cuitDetectado = "30546741253";
-                } else if (textoUpper.includes("OMINT")) {
-                    obraSocialDetectada = "OMINT S.A. DE SERVICIOS";
-                    cuitDetectado = "30550245309";
-                } else if (textoUpper.includes("GALENO")) {
-                    obraSocialDetectada = "GALENO ARGENTINA S.A.";
-                    cuitDetectado = "30522428163";
-                } else if (textoUpper.includes("MEDICUS")) {
-                    obraSocialDetectada = "MEDICUS S.A.";
-                    cuitDetectado = "30546771314";
+                // 1. EXTRACCIÓN DEL CUIT DEL RECEPTOR
+                let cuitExtraido = "30500000019";
+                const matchCuit = textoCompleto.match(/CUIT[:\s]*(\d{2}[-\s]?\d{8}[-\s]?\d)/i);
+                if (matchCuit) {
+                    // Limpiamos guiones o espacios para normalizar el CUIT
+                    cuitExtraido = matchCuit[1].replace(/[-\s]/g, '');
                 }
 
-                // Extracción del Nombre
+                // 2. EXTRACCIÓN DE LA RAZÓN SOCIAL / OBRA SOCIAL DEL RECEPTOR
+                let obraSocialExtraida = "OBRA SOCIAL GENERAL";
+                const matchRazon = textoCompleto.match(/(?:Apellido y Nombre \/ Razón Social|Razón Social)[:\s]*([A-Z0-9ÁÉÍÓÚ\s\.\,\-]+?)(?:Condición frente al IVA|Domicilio|$)/i);
+                if (matchRazon && matchRazon[1].trim().length > 3) {
+                    obraSocialExtraida = matchRazon[1].trim();
+                }
+
+                // 3. EXTRACCIÓN DE LA CONDICIÓN FRENTE AL IVA
+                let ivaExtraido = "IVA Responsable Inscripto";
+                if (textoCompleto.toUpperCase().includes("SUJETO EXENTO") || textoCompleto.toUpperCase().includes("IVA SUJETO EXENTO")) {
+                    ivaExtraido = "IVA Sujeto Exento";
+                } else if (textoCompleto.toUpperCase().includes("CONSUMIDOR FINAL")) {
+                    ivaExtraido = "Consumidor Final";
+                } else if (textoCompleto.toUpperCase().includes("RESPONSABLE MONOTRIBUTO")) {
+                    ivaExtraido = "Responsable Monotributo";
+                }
+
+                // 4. EXTRACCIÓN DEL DOMICILIO DEL RECEPTOR
+                let domicilioExtraido = "Capital Federal, Buenos Aires";
+                const matchDomicilio = textoCompleto.match(/Domicilio[:\s]*([A-Za-z0-9ÁÉÍÓÚáéíóúñÑ\s\.\,\-]+?)(?:Condición de venta|$)/i);
+                if (matchDomicilio && matchDomicilio[1].trim().length > 3) {
+                    domicilioExtraido = matchDomicilio[1].trim();
+                }
+
+                // 5. EXTRACCIÓN DE LA CONDICIÓN DE VENTA
+                let condicionVentaExtraida = "Otra";
+                if (textoCompleto.toUpperCase().includes("CUENTA CORRIENTE")) {
+                    condicionVentaExtraida = "Cuenta Corriente";
+                }
+
+                // 6. EXTRACCIÓN DEL NOMBRE DEL PACIENTE EN EL DETALLE
                 let nombrePacienteReal = "";
                 const patronNino = /(?:AL NIÑO|AL NIÑA|PACIENTE|BENEFICIARIO|BENEFICIARIA):\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?:DNI|AFILIADO|AF|PERIODO|VALOR|,|$)/i;
-                const match = textoCompleto.match(patronNino);
+                const matchPaciente = textoCompleto.match(patronNino);
 
-                if (match && match[1] && match[1].trim().length > 3) {
-                    nombrePacienteReal = match[1].trim();
+                if (matchPaciente && matchPaciente[1] && matchPaciente[1].trim().length > 3) {
+                    nombrePacienteReal = matchPaciente[1].trim();
                 } else {
-                    nombrePacienteReal = prompt("Leímos la factura. Ingresá el Nombre y Apellido del paciente:") || "Paciente Nuevo";
+                    nombrePacienteReal = prompt("Ingresá el Nombre y Apellido del paciente:") || "Paciente Nuevo";
                 }
 
-                // Extracción limpia cortando justo antes de los números de unidades y precios (ej: "unidades", "9,00", etc.)
+                // 7. EXTRACCIÓN EXACTA DEL BLOQUE DE PRODUCTO / SERVICIO
                 let descripcionLimpia = "";
                 const idxHonorarios = textoCompleto.indexOf("Honorarios");
 
                 if (idxHonorarios !== -1) {
                     descripcionLimpia = textoCompleto.substring(idxHonorarios);
                     
-                    // Buscamos patrones donde empiezan las unidades o montos numéricos al final de la descripción
+                    // Cortamos justo antes de las unidades o montos numéricos de la tabla
                     const corteUnidades = descripcionLimpia.search(/\d+[\.,]\d+\s+unidades/i);
                     const corteRes = descripcionLimpia.search(/unidades/i);
                     const corteSubtotal = descripcionLimpia.indexOf("Subtotal");
@@ -426,19 +445,18 @@
                         descripcionLimpia = descripcionLimpia.substring(0, puntoDeCorte);
                     }
                 } else {
-                    descripcionLimpia = `Honorarios profesionales por la prestación de psicopedagogía al niño: ${nombrePacienteReal} PERIODO: [MES] [ANIO]`;
+                    descripcionLimpia = `Honorarios Profesionales por la prestación de psicopedagogía al niño: ${nombrePacienteReal} PERIODO: [MES] [ANIO]`;
                 }
 
-                // Limpieza final de espacios
                 descripcionLimpia = descripcionLimpia.replace(/\s+/g, ' ').trim();
 
                 const nuevoPaciente = {
                     nombre: nombrePacienteReal,
-                    obraSocial: obraSocialDetectada,
-                    cuit: cuitDetectado,
-                    iva: "IVA Responsable Inscripto",
-                    condicionVenta: "Cuenta Corriente",
-                    domicilio: domicilioDetectado,
+                    obraSocial: obraSocialExtraida,
+                    cuit: cuitExtraido,
+                    iva: ivaExtraido,
+                    condicionVenta: condicionVentaExtraida,
+                    domicilio: domicilioExtraido,
                     textoBase: descripcionLimpia.replace(/JULIO\s+2026/gi, "[MES] [ANIO]")
                 };
 
@@ -449,7 +467,7 @@
                 selectPaciente.value = pacientesActivos.length - 1;
                 actualizarDetalle();
 
-                nombreArchivo.textContent = `¡Perfil autoconfigurado con éxito para ${nombrePacienteReal} con detalle limpio!`;
+                nombreArchivo.textContent = `¡Factura procesada con éxito! Datos cargados para ${nombrePacienteReal}.`;
                 nombreArchivo.classList.add("text-emerald-600");
 
             } catch (error) {
