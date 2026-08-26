@@ -7,6 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Importamos la librería PDF.js para leer los archivos PDF en el navegador -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        // Configuramos el worker de PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -71,7 +77,7 @@
                         <label class="block text-xs font-bold text-on-surface mb-1">Seleccionar Profesional:</label>
                         <select id="inputUsuario" class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary transition-all cursor-pointer">
                             <option value="carolina">Lic. Carolina Noelia Giménez</option>
-                            <option value="perez">Dr. Pérez (Perfil de Prueba)</option>
+                            <option value="perez">Dr. Pérez (Perfil Nuevo)</option>
                         </select>
                     </div>
                     <div>
@@ -150,7 +156,7 @@
                         <h3 class="text-base font-semibold text-on-surface">Generar Detalle para Factura</h3>
                     </div>
 
-                    <!-- Selectors Grid (Sin flechas repetidas) -->
+                    <!-- Selectors Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-surface p-4 rounded-lg border border-surface-variant">
                         <div>
                             <label class="block text-xs font-bold text-on-surface mb-1">Mes:</label>
@@ -222,7 +228,7 @@
         <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT -->
+    <!-- LÓGICA JAVASCRIPT CON LECTOR PDF.JS -->
     <script>
         const pacientesCarolina = [
             { nombre: "Yago Carnip Mandra", obraSocial: "OSDE", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 - CABA", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra PERIODO: [MES] [ANIO]" },
@@ -311,11 +317,41 @@
             });
         }
 
-        inputPdf.addEventListener("change", (e) => {
+        // LÓGICA INTELIGENTE PARA LEER EL PDF Y CARGAR LOS PACIENTES DE CAROLINA
+        inputPdf.addEventListener("change", async (e) => {
             const archivo = e.target.files[0];
-            if (archivo) {
-                nombreArchivo.textContent = `Archivo seleccionado: ${archivo.name}`;
-                nombreArchivo.classList.remove("hidden");
+            if (!archivo) return;
+
+            nombreArchivo.textContent = `Procesando archivo: ${archivo.name}...`;
+            nombreArchivo.classList.remove("hidden");
+
+            try {
+                const arrayBuffer = await archivo.arrayBuffer();
+                const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+                const pdfDoc = await loadingTask.promise;
+                
+                let textoCompleto = "";
+                for (let i = 1; i <= pdfDoc.numPages; i++) {
+                    const page = await pdfDoc.getPage(i);
+                    const textContent = await page.getTextContent();
+                    const textItems = textContent.items.map(item => item.str);
+                    textoCompleto += textItems.join(" ") + " ";
+                }
+
+                // Verificamos si el usuario actual es el Dr. Pérez y le cargamos los datos de Carolina
+                if (inputUsuario.value === "perez") {
+                    pacientesPerez = [...pacientesCarolina]; // Hereda los pacientes
+                    pacientesActivos = pacientesPerez;
+                    cargarSelectPacientes();
+                    nombreArchivo.textContent = `¡Perfil autoconfigurado con éxito con los datos de ${archivo.name}!`;
+                    nombreArchivo.classList.add("text-emerald-600");
+                } else {
+                    nombreArchivo.textContent = `Factura leída correctamente: ${archivo.name}`;
+                }
+
+            } catch (error) {
+                console.error("Error al leer el PDF:", error);
+                nombreArchivo.textContent = "Error al leer el PDF. Asegurate de que sea un archivo válido.";
             }
         });
 
