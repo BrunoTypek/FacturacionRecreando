@@ -230,7 +230,7 @@
         <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT CON EXTRACCIÓN LIMPIA DE PRODUCTO/SERVICIO -->
+    <!-- LÓGICA JAVASCRIPT CON CORTE QUIRÚRGICO DE UNIDADES/PRECIOS -->
     <script>
         const baseCarolina = [
             { nombre: "Yago Carnip Mandra", obraSocial: "OSDE", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 - CABA", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46.871.612, AF N°: 60929068103 PERIODO: [MES] [ANIO] Valor según nomenclador OSDE." },
@@ -354,12 +354,12 @@
             }
         });
 
-        // LECTURA DE PDF FILTRANDO EXACTAMENTE EL BLOQUE DE PRODUCTO/SERVICIO
+        // LECTURA DE PDF Y CORTE QUIRÚRGICO DE PRECIOS/UNIDADES
         inputPdf.addEventListener("change", async (e) => {
             const archivo = e.target.files[0];
             if (!archivo) return;
 
-            nombreArchivo.textContent = `Leyendo detalle de prestación del PDF...`;
+            nombreArchivo.textContent = `Leyendo prestación limpia del PDF...`;
             nombreArchivo.classList.remove("hidden");
 
             try {
@@ -394,7 +394,7 @@
                     cuitDetectado = "30546771314";
                 }
 
-                // Extracción inteligente del NOMBRE DEL PACIENTE
+                // Extracción del Nombre
                 let nombrePacienteReal = "";
                 const patronNino = /(?:AL NIÑO|AL NIÑA|PACIENTE|BENEFICIARIO|BENEFICIARIA):\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?:DNI|AFILIADO|AF|PERIODO|VALOR|,|$)/i;
                 const match = textoCompleto.match(patronNino);
@@ -405,25 +405,31 @@
                     nombrePacienteReal = prompt("Leímos la factura. Ingresá el Nombre y Apellido del paciente:") || "Paciente Nuevo";
                 }
 
-                // Búsqueda específica del bloque de Descripción / Producto / Servicio para evitar los datos fiscales
+                // Extracción limpia cortando justo antes de los números de unidades y precios (ej: "unidades", "9,00", etc.)
                 let descripcionLimpia = "";
-                const idxProd = textoCompleto.indexOf("Producto");
-                const idxServ = textoCompleto.indexOf("Servicio");
                 const idxHonorarios = textoCompleto.indexOf("Honorarios");
 
                 if (idxHonorarios !== -1) {
-                    // Cortamos desde la palabra "Honorarios" para quedarnos justo con el texto exacto de la prestación
                     descripcionLimpia = textoCompleto.substring(idxHonorarios);
-                    // Si el texto sigue con cosas administrativas posteriores, las acotamos
-                    const corteFinal = descripcionLimpia.indexOf("Subtotal");
-                    if (corteFinal !== -1) {
-                        descripcionLimpia = descripcionLimpia.substring(0, corteFinal);
+                    
+                    // Buscamos patrones donde empiezan las unidades o montos numéricos al final de la descripción
+                    const corteUnidades = descripcionLimpia.search(/\d+[\.,]\d+\s+unidades/i);
+                    const corteRes = descripcionLimpia.search(/unidades/i);
+                    const corteSubtotal = descripcionLimpia.indexOf("Subtotal");
+
+                    let puntoDeCorte = -1;
+                    if (corteUnidades !== -1) puntoDeCorte = corteUnidades;
+                    else if (corteRes !== -1) puntoDeCorte = corteRes;
+                    else if (corteSubtotal !== -1) puntoDeCorte = corteSubtotal;
+
+                    if (puntoDeCorte !== -1) {
+                        descripcionLimpia = descripcionLimpia.substring(0, puntoDeCorte);
                     }
                 } else {
                     descripcionLimpia = `Honorarios profesionales por la prestación de psicopedagogía al niño: ${nombrePacienteReal} PERIODO: [MES] [ANIO]`;
                 }
 
-                // Limpieza de espacios múltiples
+                // Limpieza final de espacios
                 descripcionLimpia = descripcionLimpia.replace(/\s+/g, ' ').trim();
 
                 const nuevoPaciente = {
@@ -433,7 +439,7 @@
                     iva: "IVA Responsable Inscripto",
                     condicionVenta: "Cuenta Corriente",
                     domicilio: domicilioDetectado,
-                    textoBase: descripcionLimpia.replace(/JULIO\s+2026/gi, "[MES] [ANIO]") // Normaliza fechas para el selector
+                    textoBase: descripcionLimpia.replace(/JULIO\s+2026/gi, "[MES] [ANIO]")
                 };
 
                 pacientesActivos.push(nuevoPaciente);
@@ -443,7 +449,7 @@
                 selectPaciente.value = pacientesActivos.length - 1;
                 actualizarDetalle();
 
-                nombreArchivo.textContent = `¡Perfil autoconfigurado con éxito para ${nombrePacienteReal} con detalle exacto!`;
+                nombreArchivo.textContent = `¡Perfil autoconfigurado con éxito para ${nombrePacienteReal} con detalle limpio!`;
                 nombreArchivo.classList.add("text-emerald-600");
 
             } catch (error) {
