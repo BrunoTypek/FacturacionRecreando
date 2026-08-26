@@ -230,7 +230,7 @@
         <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT CON LECTURA EXACTA DE DOMICILIO COMPLETO -->
+    <!-- LÓGICA JAVASCRIPT CON DICCIONARIO OFICIAL Y CAPTURA DE DOMICILIO COMPLETO -->
     <script>
         const baseCarolina = [
             { nombre: "Yago Carnip Mandra", obraSocial: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46.871.612, AF N°: 60929068103 PERIODO: [MES] [ANIO] Valor según nomenclador OSDE." },
@@ -242,6 +242,16 @@
             { nombre: "Gonzalo Pineda", obraSocial: "GALENO ARGENTINA SOCIEDAD ANONIMA", cuit: "30522428163", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Elvira Rawson de Dellepiane 150 - Capital Federal, Buenos Aires", textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: Gonzalo Pineda DNI: 55.181.937 PERIODO: [MES] [ANIO] valor según nomenclador Nac. Res. Conjunta 8/2022" },
             { nombre: "Alma Sesto", obraSocial: "MEDICUS SOCIEDAD ANONIMA DE ASISTENCIA MEDICA Y CIENTIFICA", cuit: "30546771314", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Larrea 877 Piso:06 - Capital Federal, Buenos Aires", textoBase: "Honorarios profesionales de psicopedagogía, beneficiaria Alma Sesto. DNI: 53.288.131 Período: [MES] [ANIO]" }
         ];
+
+        // Diccionario oficial de domicilios exactos por Obra Social para blindar el sistema
+        const domiciliosOficiales = {
+            "OBRA SOCIAL DE TECNICOS DE VUELO DE LINEAS AEREAS": "Víctor Hugo 369 - Capital Federal, Buenos Aires",
+            "OSDE": "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires",
+            "OMINT": "Carlos Pellegrini 1363 Piso:9 - Capital Federal, Buenos Aires",
+            "GALENO": "Elvira Rawson de Dellepiane 150 - Capital Federal, Buenos Aires",
+            "MEDICUS": "Larrea 877 Piso:06 - Capital Federal, Buenos Aires",
+            "OSECAC": "Moreno 648 - Capital Federal, Buenos Aires"
+        };
 
         function obtenerPacientesUsuario(usuario) {
             const guardados = localStorage.getItem('pacientes_' + usuario);
@@ -334,7 +344,6 @@
             pacientesActivos.forEach((paciente, index) => {
                 let option = document.createElement("option");
                 option.value = index;
-                // Dejamos únicamente el nombre del paciente y la obra social (sin rastro de Carolina)
                 option.textContent = `${paciente.nombre} (${paciente.obraSocial})`;
                 selectPaciente.appendChild(option);
             });
@@ -355,7 +364,7 @@
             }
         });
 
-        // LECTURA DE PDF PERFECTA CON EXTRACCIÓN DE DOMICILIO COMPLETO
+        // LECTURA DE PDF BLINDADA CON DICCIONARIO OFICIAL Y DOMICILIO EXACTO
         inputPdf.addEventListener("change", async (e) => {
             const archivo = e.target.files[0];
             if (!archivo) return;
@@ -421,23 +430,31 @@
                     else ivaExtraido = tempIva;
                 }
 
-                // 4. DOMICILIO COMPLETO DEL RECEPTOR (Desde después de los dos puntos hasta el siguiente campo)
+                // 4. DOMICILIO EXACTO DEL RECEPTOR (Usando diccionario o extrayendo el bloque completo tras "Domicilio:")
                 let domicilioExtraido = "";
-                const matchesDom = [...textoLimpio.matchAll(/Domicilio:\s*([A-Za-z0-9ÁÉÍÓÚáéíóúñÑ\s\.\,\-\/\ºª°]+?)(?=\s+Condición de venta|\s+Código|\s+Producto|$)/gi)];
                 
-                for (let matchDom of matchesDom) {
-                    let domCandidato = matchDom[1].trim();
-                    // Filtramos para ignorar el domicilio comercial de Carolina (Pringles)
-                    if (!domCandidato.toUpperCase().includes("PRINGLES") && domCandidato.length > 5) {
-                        domicilioExtraido = domCandidato;
+                // Verificamos primero en nuestro diccionario oficial si coincide alguna clave conocida
+                for (let clave in domiciliosOficiales) {
+                    if (obraSocialExtraida.toUpperCase().includes(clave)) {
+                        domicilioExtraido = domiciliosOficiales[clave];
                         break;
                     }
                 }
-                if (!domicilioExtraido && matchesDom.length > 0) {
-                    domicilioExtraido = matchesDom[matchesDom.length - 1][1].trim();
-                }
+
+                // Si no está en el diccionario, extraemos estrictamente desde después de "Domicilio:" hasta el próximo campo
                 if (!domicilioExtraido) {
-                    domicilioExtraido = "Capital Federal, Buenos Aires";
+                    const matchesDom = [...textoLimpio.matchAll(/Domicilio:\s*([A-Za-z0-9ÁÉÍÓÚáéíóúñÑ\s\.\,\-\/\ºª°]+?)(?=\s+Condición de venta|\s+Código|\s+Producto|$)/gi)];
+                    for (let matchDom of matchesDom) {
+                        let domCandidato = matchDom[1].trim();
+                        if (!domCandidato.toUpperCase().includes("PRINGLES") && domCandidato.length > 5) {
+                            domicilioExtraido = domCandidato;
+                            break;
+                        }
+                    }
+                }
+
+                if (!domicilioExtraido) {
+                    domicilioExtraido = prompt("Por favor, ingresá el Domicilio fiscal completo de la Obra Social/Receptor:") || "Capital Federal, Buenos Aires";
                 }
 
                 // 5. CONDICIÓN DE VENTA
