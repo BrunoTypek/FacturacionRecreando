@@ -45,132 +45,132 @@
 </head>
 <body class="bg-background text-on-background min-h-screen font-body-md overflow-x-hidden">
 
-    <!-- TopNavBar -->
-    <header class="fixed top-0 z-50 flex justify-between items-center h-16 px-gutter ml-72 w-[calc(100%-18rem)] bg-surface border-b border-surface-variant shadow-sm">
-        <div class="flex items-center gap-4">
-            <span class="font-semibold text-primary">Panel de Ayuda y Documentación</span>
+    <!-- TopNavBar Corregida -->
+    <header class="fixed top-0 left-72 right-0 z-50 flex justify-between items-center h-16 px-8 bg-surface border-b border-surface-variant shadow-sm">
+        <div class="flex items-center gap-2">
+            <span class="text-sm font-semibold text-on-surface-variant">Panel de Ayuda y Documentación</span>
         </div>
-        <div class="flex items-center gap-md">
-            <a href="index.html" class="text-body-md font-medium text-primary hover:underline">Volver al Panel Principal</a>
+        <div class="flex items-center">
+            <a href="index.html" class="text-sm font-semibold text-primary hover:underline">Volver al Panel Principal</a>
         </div>
     </header>
 
     <!-- SideNavBar -->
-    <nav class="fixed left-0 top-0 w-72 h-screen bg-surface-container-low flex flex-col py-lg px-md z-40 shadow-sm border-r border-surface-variant">
-        <div class="mb-xl flex items-center gap-sm px-sm">
+    <nav class="fixed left-0 top-0 w-72 h-screen bg-surface-container-low flex flex-col py-6 px-4 z-40 shadow-sm border-r border-surface-variant">
+        <div class="mb-8 flex items-center gap-3 px-2">
             <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-on-primary">
                 <span class="material-symbols-outlined">medical_information</span>
             </div>
             <div>
-                <h1 class="text-lg font-bold text-primary">FacturApp</h1>
+                <h1 class="text-base font-bold text-primary">FacturApp</h1>
                 <p class="text-xs text-on-surface-variant">Care &amp; Clarity</p>
             </div>
         </div>
         <div class="flex-1 overflow-y-auto space-y-2">
-            <a class="flex items-center gap-3 px-sm py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors" href="index.html">
+            <a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors text-sm font-medium" href="index.html">
                 <span class="material-symbols-outlined">dashboard</span>
                 <span>Dashboard</span>
             </a>
-            <a class="flex items-center gap-3 px-sm py-3 rounded-lg text-primary border-l-2 border-primary font-bold bg-primary-container/10" href="instructivo.html">
+            <a class="flex items-center gap-3 px-3 py-3 rounded-lg text-primary border-l-4 border-primary font-bold bg-primary-container/10 text-sm" href="instructivo.html">
                 <span class="material-symbols-outlined">help_center</span>
                 <span>Instructivo</span>
             </a>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="ml-72 pt-24 min-h-screen bg-background p-margin">
+    <!-- Main Content con espaciado correcto -->
+    <main class="ml-72 pt-24 min-h-screen bg-background p-8">
         <div class="max-w-5xl mx-auto">
             
             <!-- Header Section -->
-            <div class="mb-margin">
-                <a class="text-primary hover:underline text-sm flex items-center gap-1 mb-4" href="index.html">
+            <div class="mb-8">
+                <a class="text-primary hover:underline text-sm font-medium flex items-center gap-1 mb-3" href="index.html">
                     <span class="material-symbols-outlined text-sm">arrow_back</span> Volver al Panel Principal
                 </a>
                 <h2 class="text-3xl font-bold mb-2 text-on-background">Cómo emitir tu Factura C</h2>
-                <p class="text-lg text-on-surface-variant max-w-2xl">
+                <p class="text-base text-on-surface-variant max-w-2xl">
                     Seguí este paso a paso para facturar tus prestaciones correctamente en el portal de ARCA.
                 </p>
             </div>
 
-            <!-- Bento Grid Layout for Steps -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md mb-xl">
+            <!-- Bento Grid Layout with Proper Vertical Spacing (gap-6) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
                 <!-- Step 1 -->
-                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col hover:border-primary/50 hover:shadow-sm transition-all relative overflow-hidden group">
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col hover:border-primary/50 hover:shadow-sm transition-all">
                     <div class="w-12 h-12 rounded-lg bg-surface-container-high text-primary flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-2xl">login</span>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-primary mb-1 uppercase tracking-wider">Paso 1</div>
-                        <h3 class="text-lg font-bold mb-2">Ingreso al sistema</h3>
-                        <p class="text-sm text-on-surface-variant">Ingresá tu número de CUIT y posteriormente tu Clave Fiscal para acceder al portal.</p>
+                        <h3 class="text-lg font-bold mb-2 text-on-background">Ingreso al sistema</h3>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">Ingresá tu número de CUIT y posteriormente tu Clave Fiscal para acceder al portal.</p>
                     </div>
                 </div>
                 <!-- Step 2 -->
-                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col hover:border-primary/50 hover:shadow-sm transition-all relative overflow-hidden group">
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col hover:border-primary/50 hover:shadow-sm transition-all">
                     <div class="w-12 h-12 rounded-lg bg-surface-container-high text-primary flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-2xl">web</span>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-primary mb-1 uppercase tracking-wider">Paso 2</div>
-                        <h3 class="text-lg font-bold mb-2">Comprobantes en línea</h3>
-                        <p class="text-sm text-on-surface-variant">Dentro de los servicios, seleccioná <strong>"Comprobantes en línea"</strong> y hacé clic en tu nombre.</p>
+                        <h3 class="text-lg font-bold mb-2 text-on-background">Comprobantes en línea</h3>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">Dentro de los servicios, seleccioná <strong>"Comprobantes en línea"</strong> y hacé clic en tu nombre.</p>
                     </div>
                 </div>
                 <!-- Step 3 -->
-                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col hover:border-primary/50 hover:shadow-sm transition-all relative overflow-hidden group">
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col hover:border-primary/50 hover:shadow-sm transition-all">
                     <div class="w-12 h-12 rounded-lg bg-surface-container-high text-primary flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-2xl">post_add</span>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-primary mb-1 uppercase tracking-wider">Paso 3</div>
-                        <h3 class="text-lg font-bold mb-2">Generar Comprobante</h3>
-                        <p class="text-sm text-on-surface-variant">Seleccioná <strong>"Generar Comprobantes"</strong>, elegí tu punto de venta y como tipo <strong>"Factura C"</strong>.</p>
+                        <h3 class="text-lg font-bold mb-2 text-on-background">Generar Comprobante</h3>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">Seleccioná <strong>"Generar Comprobantes"</strong>, elegí tu punto de venta y como tipo <strong>"Factura C"</strong>.</p>
                     </div>
                 </div>
                 <!-- Step 4 -->
-                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col hover:border-primary/50 hover:shadow-sm transition-all relative overflow-hidden group">
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col hover:border-primary/50 hover:shadow-sm transition-all">
                     <div class="w-12 h-12 rounded-lg bg-surface-container-high text-primary flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-2xl">date_range</span>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-primary mb-1 uppercase tracking-wider">Paso 4</div>
-                        <h3 class="text-lg font-bold mb-2">Conceptos y Fechas</h3>
-                        <p class="text-sm text-on-surface-variant">Elegí <strong>"Productos y Servicios"</strong>. Determiná el rango de fechas del período facturado.</p>
+                        <h3 class="text-lg font-bold mb-2 text-on-background">Conceptos y Fechas</h3>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">Elegí <strong>"Productos y Servicios"</strong>. Determiná el rango de fechas del período facturado.</p>
                     </div>
                 </div>
                 <!-- Step 5 -->
-                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col hover:border-primary/50 hover:shadow-sm transition-all relative overflow-hidden group">
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col hover:border-primary/50 hover:shadow-sm transition-all">
                     <div class="w-12 h-12 rounded-lg bg-surface-container-high text-primary flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-2xl">person_add</span>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-primary mb-1 uppercase tracking-wider">Paso 5</div>
-                        <h3 class="text-lg font-bold mb-2">Datos del Receptor</h3>
-                        <p class="text-sm text-on-surface-variant">Completá los datos de la Obra Social: Condición frente al IVA, CUIT y condición de venta.</p>
+                        <h3 class="text-lg font-bold mb-2 text-on-background">Datos del Receptor</h3>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">Completá los datos de la Obra Social: Condición frente al IVA, CUIT y condición de venta.</p>
                     </div>
                 </div>
                 <!-- Step 6 -->
-                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col hover:border-primary/50 hover:shadow-sm transition-all relative overflow-hidden group">
+                <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col hover:border-primary/50 hover:shadow-sm transition-all">
                     <div class="w-12 h-12 rounded-lg bg-surface-container-high text-primary flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-2xl">receipt_long</span>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-primary mb-1 uppercase tracking-wider">Paso 6</div>
-                        <h3 class="text-lg font-bold mb-2">Detalle de la Operación</h3>
-                        <p class="text-sm text-on-surface-variant">Ingresá la descripción exacta, cantidad y precio unitario. Confirmá para obtener el PDF.</p>
+                        <h3 class="text-lg font-bold mb-2 text-on-background">Detalle de la Operación</h3>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">Ingresá la descripción exacta, cantidad y precio unitario. Confirmá para obtener el PDF.</p>
                     </div>
                 </div>
             </div>
 
             <!-- Video Tutorial Section -->
             <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col md:flex-row shadow-sm">
-                <div class="p-lg md:w-1/2 flex flex-col justify-center">
-                    <h3 class="text-2xl font-bold mb-2">¿Te quedó alguna duda?</h3>
-                    <p class="text-on-surface-variant mb-6">
+                <div class="p-8 md:w-1/2 flex flex-col justify-center">
+                    <h3 class="text-2xl font-bold mb-2 text-on-background">¿Te quedó alguna duda?</h3>
+                    <p class="text-on-surface-variant mb-6 text-sm leading-relaxed">
                         Si preferís ver el proceso en acción, te compartimos un tutorial detallado con el paso a paso.
                     </p>
-                    <a class="inline-flex items-center justify-center gap-2 bg-error/10 text-error hover:bg-error/20 font-bold py-3 px-6 rounded-lg transition-colors w-fit" href="https://www.youtube.com/watch?v=G_13ix-I18k" target="_blank">
+                    <a class="inline-flex items-center justify-center gap-2 bg-error/10 text-error hover:bg-error/20 font-bold py-3 px-6 rounded-lg transition-colors w-fit text-sm" href="https://www.youtube.com/watch?v=G_13ix-I18k" target="_blank">
                         <span class="material-symbols-outlined">play_circle</span>
                         Ver video en YouTube
                     </a>
