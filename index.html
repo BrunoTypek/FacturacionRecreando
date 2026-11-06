@@ -382,28 +382,35 @@
             }
         })();
 
-        /* ---------- SESIÓN ---------- */
-        function ingresar() {
-            const perfil = PERFILES[el.user.value];
-            if (!perfil || el.pass.value !== perfil.clave) {
-                el.errLogin.classList.remove("hidden");
-                return;
-            }
-            usuarioActual = el.user.value;
-            pacientes = leer("pacientes_" + usuarioActual, []);
+                /* ---------- SESIÓN ---------- */
+        function iniciarSesion(usuario) {
+            const perfil = PERFILES[usuario];
+            usuarioActual = usuario;
+            pacientes = leer("pacientes_" + usuario, []);
             el.nombreProf.textContent = perfil.nombre;
             el.bienvenida.style.display = "none";
             el.app.style.display = "block";
             el.info.style.display = "flex";
             el.salir.style.display = "flex";
             el.errLogin.classList.add("hidden");
+            try { sessionStorage.setItem("sesionActiva", usuario); } catch {}
             cargarSelectPacientes();
+        }
+
+        function ingresar() {
+            const perfil = PERFILES[el.user.value];
+            if (!perfil || el.pass.value !== perfil.clave) {
+                el.errLogin.classList.remove("hidden");
+                return;
+            }
+            iniciarSesion(el.user.value);
         }
         el.login.addEventListener("click", ingresar);
         el.pass.addEventListener("keydown", e => { if (e.key === "Enter") ingresar(); });
 
         el.salir.addEventListener("click", e => {
             e.preventDefault();
+            try { sessionStorage.removeItem("sesionActiva"); } catch {}
             el.app.style.display = "none";
             el.bienvenida.style.display = "flex";
             el.info.style.display = "none";
@@ -667,6 +674,14 @@
             const cuerpo = `Buenos días,\n\nSe adjunta la factura correspondiente a:\n\n${el.plantilla.textContent}\n\nSaludos cordiales,\n${PERFILES[usuarioActual].nombre}`;
             window.location.href = `mailto:${encodeURIComponent(p.emailDestino).replace(/%2C/g, ",").replace(/%20/g, "")}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
         });
+                /* ---------- RESTAURAR SESIÓN (al volver del instructivo) ---------- */
+        try {
+            const sesionGuardada = sessionStorage.getItem("sesionActiva");
+            if (sesionGuardada && PERFILES[sesionGuardada]) {
+                el.user.value = sesionGuardada;
+                iniciarSesion(sesionGuardada);
+            }
+        } catch {}
     </script>
 </body>
 </html>
