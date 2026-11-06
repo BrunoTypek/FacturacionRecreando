@@ -40,14 +40,14 @@
     </style>
 </head>
 <body class="bg-surface text-on-surface min-h-screen flex flex-col antialiased">
-    
+
     <!-- Header Navigation -->
-    <header class="bg-surface-container-lowest border-b border-surface-variant px-8 py-4 flex justify-between items-center sticky top-0 z-50">
+    <header class="bg-surface-container-lowest border-b border-surface-variant px-8 py-4 flex justify-between items-center sticky top-0 z-40">
         <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
             <h1 class="text-xl font-bold text-primary tracking-tight">FacturApp</h1>
         </div>
-        
+
         <div class="flex items-center gap-4">
             <span id="infoUsuario" style="display: none;" class="text-sm font-medium text-on-surface-variant flex items-center gap-1.5">
                 👤 <span id="nombreProfesional"></span>
@@ -60,10 +60,10 @@
 
     <!-- Main Content Canvas -->
     <main class="flex-grow p-8 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
+
         <!-- Left Column: Context & Auth -->
         <div class="lg:col-span-4 flex flex-col gap-6">
-            
+
             <!-- Iniciar Sesión Card -->
             <section id="pantallaLogin" class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-sm">
                 <div class="flex items-center gap-2 mb-3">
@@ -71,7 +71,7 @@
                     <h2 class="text-lg font-semibold text-on-surface">Iniciar Sesión</h2>
                 </div>
                 <p class="text-sm text-on-surface-variant mb-4">Seleccioná tu perfil para acceder al sistema.</p>
-                <form class="flex flex-col gap-3">
+                <form class="flex flex-col gap-3" onsubmit="return false;">
                     <div>
                         <label class="block text-xs font-bold text-on-surface mb-1">Seleccionar Profesional:</label>
                         <select id="inputUsuario" class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary transition-all cursor-pointer">
@@ -83,7 +83,7 @@
                     <div>
                         <label class="block text-xs font-bold text-on-surface mb-1">Contraseña:</label>
                         <input id="inputPassword" class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary transition-all placeholder:text-on-surface-variant/50" type="password" placeholder="Ingresá tu clave"/>
-                        <p id="errorLogin" class="text-[11px] text-error mt-1 hidden">Por favor, selecciona un profesional y contraseña válida (Carolina: 1234 / Pérez: 0000).</p>
+                        <p id="errorLogin" class="text-[11px] text-error mt-1 hidden">Seleccioná un profesional e ingresá una contraseña válida.</p>
                     </div>
                     <button id="btnLogin" class="mt-2 w-full bg-primary text-on-primary font-bold text-sm h-11 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container transition-colors cursor-pointer" type="button">
                         <span class="material-symbols-outlined text-[18px]">login</span> Ingresar al Sistema
@@ -110,7 +110,7 @@
 
         <!-- Right Column: Main Billing Engine -->
         <div class="lg:col-span-8 flex flex-col gap-6">
-            
+
             <!-- PANEL BLOQUEADO -->
             <section id="mensajeBienvenida" class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm flex flex-col items-center justify-center h-full min-h-[500px] text-center p-8">
                 <span class="material-symbols-outlined text-6xl text-primary/40 mb-4">lock</span>
@@ -120,30 +120,44 @@
 
             <!-- PANEL DE FACTURACIÓN -->
             <section id="contenidoApp" style="display: none;" class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant shadow-sm h-full">
-                <div class="mb-6 border-b border-surface-variant pb-4">
-                    <h2 class="text-2xl font-bold text-on-surface mb-1">Panel de Facturación</h2>
-                    <p class="text-sm text-on-surface-variant">Valores actualizados y gestión de pacientes asignados.</p>
+                <div class="mb-6 border-b border-surface-variant pb-4 flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                        <h2 class="text-2xl font-bold text-on-surface mb-1">Panel de Facturación</h2>
+                        <p class="text-sm text-on-surface-variant">Valores actualizados y gestión de pacientes asignados.</p>
+                    </div>
+                    <div class="flex flex-col items-end gap-1">
+                        <div class="flex gap-2">
+                            <button id="btnExportar" title="Descarga un archivo con todos tus pacientes" class="text-xs font-semibold text-on-surface-variant border border-outline-variant rounded-lg px-3 py-2 flex items-center gap-1 hover:border-primary hover:text-primary transition-colors cursor-pointer">
+                                <span class="material-symbols-outlined text-sm">download</span> Guardar copia de seguridad
+                            </button>
+                            <label title="Carga un archivo de copia de seguridad guardado antes" class="text-xs font-semibold text-on-surface-variant border border-outline-variant rounded-lg px-3 py-2 flex items-center gap-1 hover:border-primary hover:text-primary transition-colors cursor-pointer">
+                                <span class="material-symbols-outlined text-sm">upload</span> Restaurar copia
+                                <input type="file" id="inputJson" accept="application/json,.json" class="hidden">
+                            </label>
+                        </div>
+                        <span class="text-[11px] text-on-surface-variant opacity-70">Tus pacientes se guardan solo en este navegador.</span>
+                    </div>
                 </div>
 
-                <!-- TARJETAS DE NOMENCLADORES -->
+                <!-- TARJETAS DE NOMENCLADORES (se leen de nomencladores.json) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                     <div class="bg-surface p-4 rounded-lg border border-surface-variant">
-                        <span class="text-xs font-semibold text-on-surface-variant">Valor OSDE</span>
-                        <p class="text-primary font-bold text-xl mt-1">$ 14.011,00</p>
-                        <span class="text-[11px] text-on-surface-variant opacity-70">Actualización automática pendiente</span>
+                        <span id="nomNombre0" class="text-xs font-semibold text-on-surface-variant"></span>
+                        <p id="nomValor0" class="text-primary font-bold text-xl mt-1"></p>
+                        <span id="nomNota0" class="text-[11px] text-on-surface-variant opacity-70"></span>
                     </div>
                     <div class="bg-surface p-4 rounded-lg border border-surface-variant">
-                        <span class="text-xs font-semibold text-on-surface-variant">Otro Nomenclador</span>
-                        <p class="text-primary font-bold text-xl mt-1">$ 20.550,64</p>
-                        <span class="text-[11px] text-on-surface-variant opacity-70">Actualización automática pendiente</span>
+                        <span id="nomNombre1" class="text-xs font-semibold text-on-surface-variant"></span>
+                        <p id="nomValor1" class="text-primary font-bold text-xl mt-1"></p>
+                        <span id="nomNota1" class="text-[11px] text-on-surface-variant opacity-70"></span>
                     </div>
                 </div>
-                
+
                 <!-- Fast Action: Upload PDF -->
                 <label for="inputPdf" class="mb-6 bg-surface-container-low border border-dashed border-primary/40 rounded-lg p-5 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-primary/5 transition-colors group">
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">upload_file</span>
-                        <span class="text-sm text-primary font-semibold">Haz clic aquí para subir tu factura PDF y autoconfigurar tu perfil</span>
+                        <span class="text-sm text-primary font-semibold">Haz clic aquí para subir una factura PDF anterior y cargar el paciente automáticamente</span>
                     </div>
                     <p id="nombreArchivo" class="text-xs text-on-surface-variant font-medium mt-1 hidden"></p>
                     <input type="file" id="inputPdf" accept="application/pdf" class="hidden">
@@ -151,42 +165,34 @@
 
                 <!-- Workflow Step 2 -->
                 <div class="space-y-4">
-                    <div class="flex items-center justify-between">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
                         <h3 class="text-base font-semibold text-on-surface">Generar Detalle para Factura</h3>
-                        <button id="btnEliminarPaciente" style="display: none;" class="text-xs text-error font-medium hover:underline flex items-center gap-1 cursor-pointer">
-                            <span class="material-symbols-outlined text-sm">delete</span> Eliminar paciente seleccionado
-                        </button>
+                        <div class="flex gap-3">
+                            <button id="btnNuevoPaciente" class="text-xs text-primary font-medium hover:underline flex items-center gap-1 cursor-pointer">
+                                <span class="material-symbols-outlined text-sm">person_add</span> Agregar paciente
+                            </button>
+                            <button id="btnEditarPaciente" style="display: none;" class="text-xs text-primary font-medium hover:underline flex items-center gap-1 cursor-pointer">
+                                <span class="material-symbols-outlined text-sm">edit</span> Editar paciente
+                            </button>
+                            <button id="btnEliminarPaciente" style="display: none;" class="text-xs text-error font-medium hover:underline flex items-center gap-1 cursor-pointer">
+                                <span class="material-symbols-outlined text-sm">delete</span> Eliminar paciente seleccionado
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Selectors Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-surface p-4 rounded-lg border border-surface-variant">
                         <div>
                             <label class="block text-xs font-bold text-on-surface mb-1">Mes:</label>
-                            <select id="selectorMes" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer">
-                                <option value="ENERO">Enero</option>
-                                <option value="FEBRERO">Febrero</option>
-                                <option value="MARZO">Marzo</option>
-                                <option value="ABRIL">Abril</option>
-                                <option value="MAYO">Mayo</option>
-                                <option value="JUNIO">Junio</option>
-                                <option value="JULIO" selected>Julio</option>
-                                <option value="AGOSTO">Agosto</option>
-                                <option value="SEPTIEMBRE">Septiembre</option>
-                                <option value="OCTUBRE">Octubre</option>
-                                <option value="NOVIEMBRE">Noviembre</option>
-                                <option value="DICIEMBRE">Diciembre</option>
-                            </select>
+                            <select id="selectorMes" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer"></select>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-on-surface mb-1">Año:</label>
-                            <select id="selectorAnio" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer">
-                                <option value="2025">2025</option>
-                                <option value="2026" selected>2026</option>
-                                <option value="2027">2027</option>
-                            </select>
+                            <select id="selectorAnio" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer"></select>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-on-surface mb-1">Paciente / Obra Social:</label>
+                            <input id="filtroPacientes" type="search" placeholder="Buscar paciente u obra social" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary mb-2"/>
                             <select id="selectorPacientes" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer">
                                 <option value="">-- Seleccionar Paciente --</option>
                             </select>
@@ -201,6 +207,7 @@
                             <div><strong>Condición IVA:</strong> <span id="txtIva" class="font-medium"></span></div>
                             <div><strong>Condición de Venta:</strong> <span id="txtVenta" class="font-medium"></span></div>
                             <div class="sm:col-span-2"><strong>Domicilio:</strong> <span id="txtDomicilio" class="font-medium"></span></div>
+                            <div class="sm:col-span-2"><strong>Correo de destino:</strong> <span id="txtEmail" class="font-medium"></span></div>
                         </div>
 
                         <div class="flex flex-col gap-1">
@@ -214,10 +221,11 @@
                                 <span class="material-symbols-outlined text-sm">content_copy</span> Copiar Detalle
                                 <span id="mensajeCopiado" class="absolute inset-0 bg-emerald-50 text-emerald-700 font-bold flex items-center justify-center opacity-0 transition-opacity pointer-events-none">¡Copiado con éxito!</span>
                             </button>
-                            <button class="flex-1 bg-primary text-on-primary font-semibold text-sm h-11 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container transition-colors cursor-pointer">
+                            <button id="btnCorreo" class="flex-1 bg-primary text-on-primary font-semibold text-sm h-11 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container transition-colors cursor-pointer">
                                 <span class="material-symbols-outlined text-sm">mail</span> Redactar Correo
                             </button>
                         </div>
+                        <p class="text-[11px] text-on-surface-variant opacity-80">Recordá adjuntar el PDF de la factura en el correo antes de enviarlo.</p>
                     </div>
 
                 </div>
@@ -230,340 +238,434 @@
         <span class="font-semibold text-primary">FacturApp</span> - Simplificando la facturación para equipos interdisciplinarios.
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT CON DICCIONARIO OFICIAL Y CAPTURA DE DOMICILIO COMPLETO -->
-    <script>
-        const baseCarolina = [
-            { nombre: "Yago Carnip Mandra", obraSocial: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Yago Carnip Mandra DNI: 46.871.612, AF N°: 60929068103 PERIODO: [MES] [ANIO] Valor según nomenclador OSDE." },
-            { nombre: "Joaquin Santana", obraSocial: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS", cuit: "30546741253", iva: "IVA Responsable Inscripto", condicionVenta: "Cuenta Corriente", domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires", textoBase: "Honorarios Profesionales por la prestación de Psicopedagogia al niño: Joaquin Santana DNI: 54.702.333, AF N°: 615682214503 PERIODO: [MES] [ANIO] Valor según Nomenclador OSDE." },
-            { nombre: "Homero Giles", obraSocial: "SANTILLAN ROBERTO LOMBARDO", cuit: "20169260630", iva: "Consumidor Final", condicionVenta: "Otra", domicilio: "Cavia 545", textoBase: "Honorarios Profesionales por la presentación de psicopedagogía al niño: Homero Giles DNI: 56.076.850 AF N°: 1-56076850 PERIODO: [MES] [ANIO] valor según nomenclador Nac. Res. Conjunta 2024" },
-            { nombre: "Luna Bautista Mujis", obraSocial: "OMINT SOCIEDAD ANONIMA DE SERVICIOS", cuit: "30550245309", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Carlos Pellegrini 1363 Piso:9 - Capital Federal, Buenos Aires", textoBase: "Honorarios profesionales por la prestación de psicopedagogía al niño: Luna Bautista Mujis DNI: 56.629.620 AF: 4 340196 01 01 9 Período: [MES] [ANIO] Según resolución conjunta 8." },
-            { nombre: "Noah Telechea", obraSocial: "OBRA SOCIAL DE LOS EMPLEADOS DE COMERCIO Y ACTIVIDADES CIVILES", cuit: "30550273558", iva: "IVA Sujeto Exento", condicionVenta: "Cuenta Corriente", domicilio: "Moreno 648 - Capital Federal, Buenos Aires", textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: NOAH TELECHEA, AFILIADO 56948636 PERÍODO: [MES] [ANIO] Resolución Conjunta 9/2024." },
-            { nombre: "Ignacio Ferro Junco", obraSocial: "OBRA SOCIAL DE TECNICOS DE VUELO DE LINEAS AEREAS", cuit: "30624957942", iva: "IVA Sujeto Exento", condicionVenta: "Otra", domicilio: "Víctor Hugo 369 - Capital Federal, Buenos Aires", textoBase: "Honorarios Profesionales por la presentación de psicopedagogia al niño: Ignacio Ferro Junco DNI: 51.337.834 A.F.: 20-307223016/02 PERIODO: [MES] [ANIO] Valor según nomenclador Nac. Res. Conjunta 8/2022." },
-            { nombre: "Gonzalo Pineda", obraSocial: "GALENO ARGENTINA SOCIEDAD ANONIMA", cuit: "30522428163", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Elvira Rawson de Dellepiane 150 - Capital Federal, Buenos Aires", textoBase: "Honorarios profesionales por la prestación de psicopedagogía corresponde a sesiones mensuales al niño: Gonzalo Pineda DNI: 55.181.937 PERIODO: [MES] [ANIO] valor según nomenclador Nac. Res. Conjunta 8/2022" },
-            { nombre: "Alma Sesto", obraSocial: "MEDICUS SOCIEDAD ANONIMA DE ASISTENCIA MEDICA Y CIENTIFICA", cuit: "30546771314", iva: "IVA Responsable Inscripto", condicionVenta: "Otra", domicilio: "Larrea 877 Piso:06 - Capital Federal, Buenos Aires", textoBase: "Honorarios profesionales de psicopedagogía, beneficiaria Alma Sesto. DNI: 53.288.131 Período: [MES] [ANIO]" }
-        ];
+    <!-- MODAL: agregar / editar / revisar paciente -->
+    <div id="modal" style="display: none;" class="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+            <h3 id="modalTitulo" class="text-lg font-bold text-on-surface mb-1">Paciente</h3>
+            <p id="modalAyuda" class="text-xs text-on-surface-variant mb-4"></p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-on-surface mb-1">Paciente *</label>
+                    <input id="mNombre" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary"/>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-on-surface mb-1">Obra Social *</label>
+                    <input id="mObra" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary"/>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-on-surface mb-1">CUIT</label>
+                    <input id="mCuit" inputmode="numeric" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary"/>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-on-surface mb-1">Condición IVA</label>
+                    <select id="mIva" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer">
+                        <option>IVA Responsable Inscripto</option><option>IVA Sujeto Exento</option><option>Consumidor Final</option><option>Responsable Monotributo</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-on-surface mb-1">Condición de Venta</label>
+                    <select id="mVenta" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary cursor-pointer">
+                        <option>Cuenta Corriente</option><option>Otra</option><option>Contado</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-on-surface mb-1">Domicilio</label>
+                    <input id="mDom" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary"/>
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-bold text-on-surface mb-1">Correo de destino (obra social) <span class="font-normal text-on-surface-variant">(si son varios, separalos con coma)</span></label>
+                    <input id="mEmail" type="text" placeholder="facturacion@obrasocial.com.ar" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary"/>
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-bold text-on-surface mb-1">Texto del detalle * <span class="font-normal text-on-surface-variant">(usá [MES] y [ANIO] donde van el mes y el año)</span></label>
+                    <textarea id="mTexto" rows="4" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2 text-sm font-mono text-on-surface focus:outline-none focus:border-primary"></textarea>
+                </div>
+            </div>
+            <p id="mError" class="text-xs text-error mt-3 hidden"></p>
+            <div class="flex justify-end gap-2 mt-5">
+                <button id="mCancelar" class="px-4 h-10 rounded-lg border border-outline-variant text-sm font-semibold hover:bg-surface-container cursor-pointer">Cancelar</button>
+                <button id="mGuardar" class="px-4 h-10 rounded-lg bg-primary text-on-primary text-sm font-semibold hover:bg-primary-container cursor-pointer">Guardar paciente</button>
+            </div>
+        </div>
+    </div>
 
-        // Diccionario oficial de domicilios exactos por Obra Social para blindar el sistema
-        const domiciliosOficiales = {
-            "OBRA SOCIAL DE TECNICOS DE VUELO DE LINEAS AEREAS": "Víctor Hugo 369 - Capital Federal, Buenos Aires",
-            "OSDE": "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires",
-            "OMINT": "Carlos Pellegrini 1363 Piso:9 - Capital Federal, Buenos Aires",
-            "GALENO": "Elvira Rawson de Dellepiane 150 - Capital Federal, Buenos Aires",
-            "MEDICUS": "Larrea 877 Piso:06 - Capital Federal, Buenos Aires",
-            "OSECAC": "Moreno 648 - Capital Federal, Buenos Aires"
+    <script>
+        /* ---------- CONFIGURACIÓN ---------- */
+
+        // Valores de respaldo: se usan solo si no se puede leer nomencladores.json.
+        const NOMENCLADORES_RESPALDO = {
+            actualizado: "",
+            valores: [
+                { nombre: "Valor OSDE", valor: 14011.00 },
+                { nombre: "Otro Nomenclador", valor: 20550.64 }
+            ]
         };
 
-        function obtenerPacientesUsuario(usuario) {
-            const guardados = localStorage.getItem('pacientes_' + usuario);
-            if (guardados) {
-                return JSON.parse(guardados);
-            }
-            const inicial = usuario === 'carolina' ? baseCarolina : [];
-            localStorage.setItem('pacientes_' + usuario, JSON.stringify(inicial));
-            return inicial;
-        }
+        // Las claves son solo una barrera de demostración: al estar en el código, cualquiera que abra la página puede leerlas.
+        const PERFILES = {
+            carolina: { clave: "1234", nombre: "Lic. Carolina N. Giménez", apellido: "GIMENEZ" },
+            perez:    { clave: "0000", nombre: "Dr. Pérez",               apellido: "PEREZ" }
+        };
 
-        function guardarPacientesUsuario(usuario, lista) {
-            localStorage.setItem('pacientes_' + usuario, JSON.stringify(lista));
-        }
+        const MESES = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
+
+        const OBRAS_SOCIALES = [
+            { claves: ["TECNICOS DE VUELO"], nombre: "OBRA SOCIAL DE TECNICOS DE VUELO DE LINEAS AEREAS", domicilio: "Víctor Hugo 369 - Capital Federal, Buenos Aires" },
+            { claves: ["OSDE"], nombre: "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS", domicilio: "Av. Leandro N. Alem 1067 Piso:09 - Capital Federal, Buenos Aires" },
+            { claves: ["OMINT"], nombre: "OMINT SOCIEDAD ANONIMA DE SERVICIOS", domicilio: "Carlos Pellegrini 1363 Piso:9 - Capital Federal, Buenos Aires" },
+            { claves: ["GALENO"], nombre: "GALENO ARGENTINA SOCIEDAD ANONIMA", domicilio: "Elvira Rawson de Dellepiane 150 - Capital Federal, Buenos Aires" },
+            { claves: ["MEDICUS"], nombre: "MEDICUS SOCIEDAD ANONIMA DE ASISTENCIA MEDICA Y CIENTIFICA", domicilio: "Larrea 877 Piso:06 - Capital Federal, Buenos Aires" },
+            { claves: ["OSECAC", "EMPLEADOS DE COMERCIO"], nombre: "OBRA SOCIAL DE LOS EMPLEADOS DE COMERCIO Y ACTIVIDADES CIVILES", domicilio: "Moreno 648 - Capital Federal, Buenos Aires" },
+            { claves: ["SANTILLAN"], nombre: "SANTILLAN ROBERTO LOMBARDO", domicilio: "" }
+        ];
+
+        /* ---------- ALMACENAMIENTO (por usuario) ---------- */
+        // Se usan las mismas claves de localStorage que antes: los pacientes ya cargados siguen apareciendo.
+        const leer = (k, def) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch { return def; } };
+        const guardar = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 
         let usuarioActual = "";
-        let pacientesActivos = [];
+        let pacientes = [];
+        let indiceEdicion = null;
 
-        const btnLogin = document.getElementById("btnLogin");
-        const inputUsuario = document.getElementById("inputUsuario");
-        const inputPassword = document.getElementById("inputPassword");
-        const errorLogin = document.getElementById("errorLogin");
-        const infoUsuario = document.getElementById("infoUsuario");
-        const nombreProfesional = document.getElementById("nombreProfesional");
-        const btnCerrarSesion = document.getElementById("btnCerrarSesion");
-        const mensajeBienvenida = document.getElementById("mensajeBienvenida");
-        const contenidoApp = document.getElementById("contenidoApp");
+        const $ = id => document.getElementById(id);
+        const el = {
+            login: $("btnLogin"), user: $("inputUsuario"), pass: $("inputPassword"), errLogin: $("errorLogin"),
+            info: $("infoUsuario"), nombreProf: $("nombreProfesional"), salir: $("btnCerrarSesion"),
+            bienvenida: $("mensajeBienvenida"), app: $("contenidoApp"),
+            selPac: $("selectorPacientes"), selMes: $("selectorMes"), selAnio: $("selectorAnio"), filtro: $("filtroPacientes"),
+            resultado: $("resultadoDetalle"), btnDel: $("btnEliminarPaciente"), btnEdit: $("btnEditarPaciente"), btnNuevo: $("btnNuevoPaciente"),
+            obra: $("txtObraSocial"), cuit: $("txtCuit"), iva: $("txtIva"), venta: $("txtVenta"), dom: $("txtDomicilio"), email: $("txtEmail"), plantilla: $("txtPlantilla"),
+            copiar: $("btnCopiar"), copiado: $("mensajeCopiado"), correo: $("btnCorreo"),
+            pdf: $("inputPdf"), estado: $("nombreArchivo"), json: $("inputJson"), exportar: $("btnExportar")
+        };
 
-        const selectPaciente = document.getElementById("selectorPacientes");
-        const selectMes = document.getElementById("selectorMes");
-        const selectAnio = document.getElementById("selectorAnio");
-        const panelResultado = document.getElementById("resultadoDetalle");
-        const btnEliminarPaciente = document.getElementById("btnEliminarPaciente");
-        
-        const txtObraSocial = document.getElementById("txtObraSocial");
-        const txtCuit = document.getElementById("txtCuit");
-        const txtIva = document.getElementById("txtIva");
-        const txtVenta = document.getElementById("txtVenta");
-        const txtDomicilio = document.getElementById("txtDomicilio");
-        const txtPlantilla = document.getElementById("txtPlantilla");
-        
-        const btnCopiar = document.getElementById("btnCopiar");
-        const mensajeCopiado = document.getElementById("mensajeCopiado");
-        const inputPdf = document.getElementById("inputPdf");
-        const nombreArchivo = document.getElementById("nombreArchivo");
-
-        btnLogin.addEventListener("click", () => {
-            const user = inputUsuario.value;
-            const pass = inputPassword.value;
-
-            if (user === "carolina" && pass === "1234") {
-                usuarioActual = "carolina";
-                pacientesActivos = obtenerPacientesUsuario("carolina");
-                nombreProfesional.textContent = "Lic. Carolina N. Giménez";
-                iniciarSesionExitosa();
-            } else if (user === "perez" && pass === "0000") {
-                usuarioActual = "perez";
-                pacientesActivos = obtenerPacientesUsuario("perez");
-                nombreProfesional.textContent = "Dr. Pérez";
-                iniciarSesionExitosa();
-            } else {
-                errorLogin.classList.remove("hidden");
-            }
-        });
-
-        function iniciarSesionExitosa() {
-            mensajeBienvenida.style.display = "none";
-            contenidoApp.style.display = "block";
-            infoUsuario.style.display = "flex";
-            btnCerrarSesion.style.display = "flex";
-            errorLogin.classList.add("hidden");
-            cargarSelectPacientes();
-        }
-
-        btnCerrarSesion.addEventListener("click", (e) => {
-            e.preventDefault();
-            contenidoApp.style.display = "none";
-            mensajeBienvenida.style.display = "flex";
-            inputPassword.value = "";
-            infoUsuario.style.display = "none";
-            btnCerrarSesion.style.display = "none";
-            panelResultado.style.display = "none";
-            btnEliminarPaciente.style.display = "none";
-            inputUsuario.value = "";
-            usuarioActual = "";
-        });
-
-        function cargarSelectPacientes() {
-            selectPaciente.innerHTML = '<option value="">-- Seleccionar Paciente --</option>';
-            pacientesActivos.forEach((paciente, index) => {
-                let option = document.createElement("option");
-                option.value = index;
-                option.textContent = `${paciente.nombre} (${paciente.obraSocial})`;
-                selectPaciente.appendChild(option);
+        /* ---------- NOMENCLADORES (solo lectura, desde nomencladores.json) ---------- */
+        function mostrarNomencladores(datos) {
+            const fecha = datos.actualizado ? datos.actualizado.split("-").reverse().join("/") : "";
+            datos.valores.slice(0, 2).forEach((n, i) => {
+                $("nomNombre" + i).textContent = n.nombre;
+                $("nomValor" + i).textContent = "$ " + Number(n.valor).toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                $("nomNota" + i).textContent = fecha ? "Valor vigente. Actualizado el " + fecha : "Valor de referencia";
             });
-            panelResultado.style.display = "none";
-            btnEliminarPaciente.style.display = "none";
         }
 
-        btnEliminarPaciente.addEventListener("click", () => {
-            const index = selectPaciente.value;
-            if (index === "") return;
-
-            if (confirm("¿Estás seguro de que querés eliminar este paciente del sistema?")) {
-                pacientesActivos.splice(index, 1);
-                guardarPacientesUsuario(usuarioActual, pacientesActivos);
-                cargarSelectPacientes();
-                panelResultado.style.display = "none";
-                btnEliminarPaciente.style.display = "none";
-            }
-        });
-
-        // LECTURA DE PDF BLINDADA CON DICCIONARIO OFICIAL Y DOMICILIO EXACTO
-        inputPdf.addEventListener("change", async (e) => {
-            const archivo = e.target.files[0];
-            if (!archivo) return;
-
-            nombreArchivo.textContent = `Analizando comprobante PDF...`;
-            nombreArchivo.classList.remove("hidden");
-
+        async function cargarNomencladores() {
             try {
-                const arrayBuffer = await archivo.arrayBuffer();
-                const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-                const pdfDoc = await loadingTask.promise;
-                
-                let textoCompleto = "";
-                for (let i = 1; i <= pdfDoc.numPages; i++) {
-                    const page = await pdfDoc.getPage(i);
-                    const textContent = await page.getTextContent();
-                    const textItems = textContent.items.map(item => item.str);
-                    textoCompleto += textItems.join(" ") + " ";
-                }
-
-                const textoLimpio = textoCompleto.replace(/\s+/g, ' ');
-
-                // 1. OBRA SOCIAL / RAZÓN SOCIAL DEL RECEPTOR
-                let obraSocialExtraida = "";
-                const partesRazon = [...textoLimpio.matchAll(/(?:Apellido y Nombre \/ Razón Social|Razón Social):\s*([A-Z0-9ÁÉÍÓÚÑ\s\.\,\-]+?)(?=\s+Condición frente al IVA|\s+Domicilio|\s+CUIT|$)/gi)];
-                
-                for (let match of partesRazon) {
-                    let candidata = match[1].trim();
-                    if (!candidata.toUpperCase().includes("GIMENEZ") && !candidata.toUpperCase().includes("CAROLINA") && candidata.length > 3) {
-                        obraSocialExtraida = candidata.replace(/CUIT:.*$/, '').trim();
-                        break;
-                    }
-                }
-
-                if (!obraSocialExtraida) {
-                    const txtUpper = textoLimpio.toUpperCase();
-                    if (txtUpper.includes("TECNICOS DE VUELO")) obraSocialExtraida = "OBRA SOCIAL DE TECNICOS DE VUELO DE LINEAS AEREAS";
-                    else if (txtUpper.includes("OSDE")) obraSocialExtraida = "OSDE ORGANIZACION DE SERVICIOS DIRECTOS EMPRESARIOS";
-                    else if (txtUpper.includes("OMINT")) obraSocialExtraida = "OMINT SOCIEDAD ANONIMA DE SERVICIOS";
-                    else if (txtUpper.includes("GALENO")) obraSocialExtraida = "GALENO ARGENTINA SOCIEDAD ANONIMA";
-                    else if (txtUpper.includes("MEDICUS")) obraSocialExtraida = "MEDICUS SOCIEDAD ANONIMA DE ASISTENCIA MEDICA Y CIENTIFICA";
-                    else if (txtUpper.includes("OSECAC") || txtUpper.includes("EMPLEADOS DE COMERCIO")) obraSocialExtraida = "OBRA SOCIAL DE LOS EMPLEADOS DE COMERCIO Y ACTIVIDADES CIVILES";
-                    else if (txtUpper.includes("SANTILLAN")) obraSocialExtraida = "SANTILLAN ROBERTO LOMBARDO";
-                    else obraSocialExtraida = "OBRA SOCIAL GENERAL";
-                }
-
-                // 2. CUIT DEL RECEPTOR
-                let cuitExtraido = "30500000019";
-                const matchesCuit = [...textoLimpio.matchAll(/CUIT:\s*(\d{2}[-\s]?\d{8}[-\s]?\d)/gi)];
-                if (matchesCuit.length >= 2) {
-                    cuitExtraido = matchesCuit[1][1].replace(/[-\s]/g, '');
-                } else if (matchesCuit.length === 1) {
-                    cuitExtraido = matchesCuit[0][1].replace(/[-\s]/g, '');
-                }
-
-                // 3. CONDICIÓN IVA
-                let ivaExtraido = "IVA Responsable Inscripto";
-                const matchIva = textoLimpio.match(/Condición frente al IVA:\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?=\s+Domicilio|\s+CUIT|\s+Condición de venta|$)/i);
-                if (matchIva && matchIva[1]) {
-                    const tempIva = matchIva[1].trim();
-                    if (tempIva.toUpperCase().includes("EXENTO")) ivaExtraido = "IVA Sujeto Exento";
-                    else if (tempIva.toUpperCase().includes("CONSUMIDOR")) ivaExtraido = "Consumidor Final";
-                    else ivaExtraido = tempIva;
-                }
-
-                // 4. DOMICILIO EXACTO DEL RECEPTOR (Usando diccionario o extrayendo el bloque completo tras "Domicilio:")
-                let domicilioExtraido = "";
-                
-                // Verificamos primero en nuestro diccionario oficial si coincide alguna clave conocida
-                for (let clave in domiciliosOficiales) {
-                    if (obraSocialExtraida.toUpperCase().includes(clave)) {
-                        domicilioExtraido = domiciliosOficiales[clave];
-                        break;
-                    }
-                }
-
-                // Si no está en el diccionario, extraemos estrictamente desde después de "Domicilio:" hasta el próximo campo
-                if (!domicilioExtraido) {
-                    const matchesDom = [...textoLimpio.matchAll(/Domicilio:\s*([A-Za-z0-9ÁÉÍÓÚáéíóúñÑ\s\.\,\-\/\ºª°]+?)(?=\s+Condición de venta|\s+Código|\s+Producto|$)/gi)];
-                    for (let matchDom of matchesDom) {
-                        let domCandidato = matchDom[1].trim();
-                        if (!domCandidato.toUpperCase().includes("PRINGLES") && domCandidato.length > 5) {
-                            domicilioExtraido = domCandidato;
-                            break;
-                        }
-                    }
-                }
-
-                if (!domicilioExtraido) {
-                    domicilioExtraido = prompt("Por favor, ingresá el Domicilio fiscal completo de la Obra Social/Receptor:") || "Capital Federal, Buenos Aires";
-                }
-
-                // 5. CONDICIÓN DE VENTA
-                let condicionVentaExtraida = "Otra";
-                if (textoLimpio.toUpperCase().includes("CUENTA CORRIENTE")) {
-                    condicionVentaExtraida = "Cuenta Corriente";
-                }
-
-                // 6. NOMBRE DEL PACIENTE
-                let nombrePacienteReal = "";
-                const patronNino = /(?:AL NIÑO|AL NIÑA|PACIENTE|BENEFICIARIO|BENEFICIARIA):\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?=\s+DNI|\s+AFILIADO|\s+AF|\s+PERIODO|\s+VALOR|,|$)/i;
-                const matchPaciente = textoLimpio.match(patronNino);
-
-                if (matchPaciente && matchPaciente[1] && matchPaciente[1].trim().length > 2) {
-                    nombrePacienteReal = matchPaciente[1].trim();
-                } else {
-                    nombrePacienteReal = prompt("Por favor, ingresá el Nombre y Apellido del paciente:") || "Paciente Nuevo";
-                }
-
-                // 7. DETALLE DEL PRODUCTO / SERVICIO
-                let descripcionLimpia = "";
-                const idxHonorarios = textoLimpio.indexOf("Honorarios");
-
-                if (idxHonorarios !== -1) {
-                    descripcionLimpia = textoLimpio.substring(idxHonorarios);
-                    
-                    const corteUnidades = descripcionLimpia.search(/\d+[\.,]\d+\s+unidades/i);
-                    const corteRes = descripcionLimpia.search(/unidades/i);
-                    const corteSubtotal = descripcionLimpia.indexOf("Subtotal");
-
-                    let puntoDeCorte = -1;
-                    if (corteUnidades !== -1) puntoDeCorte = corteUnidades;
-                    else if (corteRes !== -1) puntoDeCorte = corteRes;
-                    else if (corteSubtotal !== -1) puntoDeCorte = corteSubtotal;
-
-                    if (puntoDeCorte !== -1) {
-                        descripcionLimpia = descripcionLimpia.substring(0, puntoDeCorte);
-                    }
-                } else {
-                    descripcionLimpia = `Honorarios Profesionales por la prestación de psicopedagogía al niño: ${nombrePacienteReal} PERIODO: [MES] [ANIO]`;
-                }
-
-                descripcionLimpia = descripcionLimpia.replace(/\s+/g, ' ').trim();
-
-                const nuevoPaciente = {
-                    nombre: nombrePacienteReal,
-                    obraSocial: obraSocialExtraida,
-                    cuit: cuitExtraido,
-                    iva: ivaExtraido,
-                    condicionVenta: condicionVentaExtraida,
-                    domicilio: domicilioExtraido,
-                    textoBase: descripcionLimpia.replace(/JULIO\s+2026/gi, "[MES] [ANIO]")
-                };
-
-                pacientesActivos.push(nuevoPaciente);
-                guardarPacientesUsuario(usuarioActual, pacientesActivos);
-                cargarSelectPacientes();
-
-                selectPaciente.value = pacientesActivos.length - 1;
-                actualizarDetalle();
-
-                nombreArchivo.textContent = `¡Factura procesada con éxito para ${nombrePacienteReal}!`;
-                nombreArchivo.classList.add("text-emerald-600");
-
-            } catch (error) {
-                console.error("Error al leer el PDF:", error);
-                nombreArchivo.textContent = "Error al procesar el archivo PDF. Probá con otro documento.";
+                const r = await fetch("nomencladores.json", { cache: "no-store" });
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                const datos = await r.json();
+                if (!Array.isArray(datos.valores) || datos.valores.length < 2) throw new Error("formato");
+                mostrarNomencladores(datos);
+            } catch (err) {
+                console.warn("No se pudo leer nomencladores.json, se usan los valores de respaldo.", err);
+                mostrarNomencladores(NOMENCLADORES_RESPALDO);
             }
-        });
+        }
+        cargarNomencladores();
 
-        function actualizarDetalle() {
-            const index = selectPaciente.value;
-            if (index === "") {
-                panelResultado.style.display = "none";
-                btnEliminarPaciente.style.display = "none";
+        /* ---------- MES Y AÑO ---------- */
+        (function initSelectores() {
+            const hoy = new Date();
+            MESES.forEach((m, i) => {
+                const o = document.createElement("option");
+                o.value = m;
+                o.textContent = m.charAt(0) + m.slice(1).toLowerCase();
+                if (i === hoy.getMonth()) o.selected = true;
+                el.selMes.appendChild(o);
+            });
+            for (let a = hoy.getFullYear() - 1; a <= hoy.getFullYear() + 1; a++) {
+                const o = document.createElement("option");
+                o.value = o.textContent = a;
+                if (a === hoy.getFullYear()) o.selected = true;
+                el.selAnio.appendChild(o);
+            }
+        })();
+
+        /* ---------- SESIÓN ---------- */
+        function ingresar() {
+            const perfil = PERFILES[el.user.value];
+            if (!perfil || el.pass.value !== perfil.clave) {
+                el.errLogin.classList.remove("hidden");
                 return;
             }
+            usuarioActual = el.user.value;
+            pacientes = leer("pacientes_" + usuarioActual, []);
+            el.nombreProf.textContent = perfil.nombre;
+            el.bienvenida.style.display = "none";
+            el.app.style.display = "block";
+            el.info.style.display = "flex";
+            el.salir.style.display = "flex";
+            el.errLogin.classList.add("hidden");
+            cargarSelectPacientes();
+        }
+        el.login.addEventListener("click", ingresar);
+        el.pass.addEventListener("keydown", e => { if (e.key === "Enter") ingresar(); });
 
-            const p = pacientesActivos[index];
-            const mesSeleccionado = selectMes.value;
-            const anioSeleccionado = selectAnio.value;
+        el.salir.addEventListener("click", e => {
+            e.preventDefault();
+            el.app.style.display = "none";
+            el.bienvenida.style.display = "flex";
+            el.info.style.display = "none";
+            el.salir.style.display = "none";
+            el.pass.value = "";
+            el.user.value = "";
+            el.filtro.value = "";
+            el.resultado.style.display = "none";
+            usuarioActual = "";
+            pacientes = [];
+            setEstado("");
+        });
 
-            txtObraSocial.textContent = p.obraSocial;
-            txtCuit.textContent = p.cuit;
-            txtIva.textContent = p.iva;
-            txtVenta.textContent = p.condicionVenta;
-            txtDomicilio.textContent = p.domicilio;
-            
-            let textoFinal = p.textoBase.replace(/\[MES\]/g, mesSeleccionado).replace(/\[ANIO\]/g, anioSeleccionado);
-            txtPlantilla.textContent = textoFinal;
+        /* ---------- PACIENTES ---------- */
+        function cargarSelectPacientes(seleccionar) {
+            const q = el.filtro.value.trim().toLowerCase();
+            const previo = seleccionar !== undefined ? String(seleccionar) : el.selPac.value;
+            el.selPac.innerHTML = '<option value="">-- Seleccionar Paciente --</option>';
+            pacientes.forEach((p, i) => {
+                if (q && !(p.nombre + " " + p.obraSocial).toLowerCase().includes(q)) return;
+                const o = document.createElement("option");
+                o.value = i;
+                o.textContent = `${p.nombre} (${p.obraSocial})`;
+                el.selPac.appendChild(o);
+            });
+            el.selPac.value = previo;
+            if (el.selPac.value !== previo) el.selPac.value = "";
+            actualizarDetalle();
+        }
+        el.filtro.addEventListener("input", () => cargarSelectPacientes());
 
-            panelResultado.style.display = "block";
-            btnEliminarPaciente.style.display = "flex";
+        function actualizarDetalle() {
+            const i = el.selPac.value;
+            if (i === "") {
+                el.resultado.style.display = "none";
+                el.btnDel.style.display = "none";
+                el.btnEdit.style.display = "none";
+                return;
+            }
+            const p = pacientes[i];
+            el.obra.textContent = p.obraSocial;
+            el.cuit.textContent = p.cuit || "-";
+            el.iva.textContent = p.iva;
+            el.venta.textContent = p.condicionVenta;
+            el.dom.textContent = p.domicilio || "-";
+            el.email.textContent = p.emailDestino || "Sin cargar (se te pedirá al redactar el correo)";
+            el.plantilla.textContent = p.textoBase.replace(/\[MES\]/g, el.selMes.value).replace(/\[ANIO\]/g, el.selAnio.value);
+            el.resultado.style.display = "block";
+            el.btnDel.style.display = "flex";
+            el.btnEdit.style.display = "flex";
+        }
+        [el.selPac, el.selMes, el.selAnio].forEach(s => s.addEventListener("change", actualizarDetalle));
+
+        el.btnDel.addEventListener("click", () => {
+            if (el.selPac.value === "") return;
+            if (!confirm("¿Estás seguro de que querés eliminar este paciente del sistema?")) return;
+            pacientes.splice(el.selPac.value, 1);
+            guardar("pacientes_" + usuarioActual, pacientes);
+            cargarSelectPacientes("");
+        });
+
+        // Si otro paciente de la misma obra social ya tiene correo cargado, se reutiliza.
+        function emailDeObra(obraSocial) {
+            const otro = pacientes.find(p => p.obraSocial === obraSocial && p.emailDestino);
+            return otro ? otro.emailDestino : "";
         }
 
-        selectPaciente.addEventListener("change", actualizarDetalle);
-        selectMes.addEventListener("change", actualizarDetalle);
-        selectAnio.addEventListener("change", actualizarDetalle);
+        /* ---------- MODAL DE PACIENTE ---------- */
+        const mc = { nombre: $("mNombre"), obra: $("mObra"), cuit: $("mCuit"), iva: $("mIva"), venta: $("mVenta"), dom: $("mDom"), email: $("mEmail"), texto: $("mTexto"), err: $("mError") };
 
-        btnCopiar.addEventListener("click", () => {
-            const textoACopiar = txtPlantilla.textContent;
-            navigator.clipboard.writeText(textoACopiar).then(() => {
-                mensajeCopiado.classList.remove("opacity-0");
-                mensajeCopiado.classList.add("opacity-100");
-                setTimeout(() => {
-                    mensajeCopiado.classList.remove("opacity-100");
-                    mensajeCopiado.classList.add("opacity-0");
-                }, 2000);
+        function fijarSelect(sel, valor) {
+            if (valor && ![...sel.options].some(o => o.value === valor)) sel.add(new Option(valor, valor));
+            sel.value = valor || sel.options[0].value;
+        }
+
+        function abrirModal(datos, indice, titulo, ayuda) {
+            indiceEdicion = indice;
+            $("modalTitulo").textContent = titulo;
+            $("modalAyuda").textContent = ayuda || "";
+            mc.nombre.value = datos.nombre || "";
+            mc.obra.value = datos.obraSocial || "";
+            mc.cuit.value = datos.cuit || "";
+            fijarSelect(mc.iva, datos.iva);
+            fijarSelect(mc.venta, datos.condicionVenta);
+            mc.dom.value = datos.domicilio || "";
+            mc.email.value = datos.emailDestino || emailDeObra(datos.obraSocial) || "";
+            mc.texto.value = datos.textoBase || "";
+            mc.err.classList.add("hidden");
+            $("modal").style.display = "flex";
+            mc.nombre.focus();
+        }
+        const cerrarModal = () => { $("modal").style.display = "none"; };
+        $("mCancelar").addEventListener("click", cerrarModal);
+        document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarModal(); });
+
+        $("mGuardar").addEventListener("click", () => {
+            const correos = mc.email.value.split(/[,;]/).map(x => x.trim()).filter(Boolean);
+            const p = {
+                nombre: mc.nombre.value.trim(), obraSocial: mc.obra.value.trim(), cuit: mc.cuit.value.replace(/[-\s]/g, ""),
+                iva: mc.iva.value, condicionVenta: mc.venta.value, domicilio: mc.dom.value.trim(),
+                emailDestino: correos.join(", "), textoBase: mc.texto.value.trim()
+            };
+            const falla = msg => { mc.err.textContent = msg; mc.err.classList.remove("hidden"); };
+            if (!p.nombre || !p.obraSocial || !p.textoBase) return falla("Completá paciente, obra social y texto del detalle.");
+            if (p.cuit && !/^\d{11}$/.test(p.cuit)) return falla("El CUIT debe tener 11 números.");
+            if (!correos.every(c => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c))) return falla("Revisá el correo de destino: tiene que ser una dirección válida.");
+
+            const repetido = pacientes.findIndex((x, i) => i !== indiceEdicion && x.nombre.toLowerCase() === p.nombre.toLowerCase() && x.obraSocial === p.obraSocial);
+            if (repetido !== -1 && !confirm("Ya existe un paciente con ese nombre y obra social. ¿Guardar igual?")) return;
+
+            let pos;
+            if (indiceEdicion === null) { pacientes.push(p); pos = pacientes.length - 1; }
+            else { pacientes[indiceEdicion] = p; pos = indiceEdicion; }
+            guardar("pacientes_" + usuarioActual, pacientes);
+            cerrarModal();
+            el.filtro.value = "";
+            cargarSelectPacientes(pos);
+        });
+
+        el.btnNuevo.addEventListener("click", () => abrirModal(
+            { textoBase: "Honorarios profesionales por la prestación de psicopedagogía al niño: NOMBRE DNI: 00.000.000 PERIODO: [MES] [ANIO]" },
+            null, "Agregar paciente", "Completá los datos de facturación."
+        ));
+        el.btnEdit.addEventListener("click", () => {
+            const i = el.selPac.value;
+            if (i !== "") abrirModal(pacientes[i], Number(i), "Editar paciente", "");
+        });
+
+        /* ---------- LECTURA DE PDF ---------- */
+        function setEstado(msg, tipo) {
+            el.estado.textContent = msg;
+            el.estado.className = "text-xs font-medium mt-1 " +
+                (tipo === "ok" ? "text-emerald-600" : tipo === "error" ? "text-error" : "text-on-surface-variant") +
+                (msg ? "" : " hidden");
+        }
+
+        function extraerDatos(texto, perfil) {
+            const T = texto.toUpperCase();
+
+            // Receptor: si hay dos bloques (emisor y receptor) se usa el segundo; si hay uno, el que no sea del profesional.
+            const razones = [...texto.matchAll(/(?:Apellido y Nombre \/ Razón Social|Razón Social):\s*([A-Z0-9ÁÉÍÓÚÑ\s\.\,\-]+?)(?=\s+Condición frente al IVA|\s+Domicilio|\s+CUIT|$)/gi)]
+                .map(m => m[1].replace(/CUIT:.*$/, "").trim()).filter(x => x.length > 3);
+            let razon = razones.length >= 2 ? razones[1] : (razones.find(x => !x.toUpperCase().includes(perfil.apellido)) || "");
+            const conocida = OBRAS_SOCIALES.find(o => o.claves.some(c => (razon || T).toUpperCase().includes(c)));
+            if (!razon && conocida) razon = conocida.nombre;
+
+            const cuits = [...texto.matchAll(/CUIT:\s*(\d{2}[-\s]?\d{8}[-\s]?\d)/gi)].map(m => m[1].replace(/[-\s]/g, ""));
+            const cuit = cuits.length >= 2 ? cuits[1] : (cuits[0] || "");
+
+            let iva = "IVA Responsable Inscripto";
+            const mIva = texto.match(/Condición frente al IVA:\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?=\s+Domicilio|\s+CUIT|\s+Condición de venta|$)/i);
+            if (mIva) {
+                const t = mIva[1].trim().toUpperCase();
+                iva = t.includes("EXENTO") ? "IVA Sujeto Exento" : t.includes("CONSUMIDOR") ? "Consumidor Final" : mIva[1].trim();
+            }
+
+            let domicilio = conocida && conocida.domicilio ? conocida.domicilio : "";
+            if (!domicilio) {
+                const doms = [...texto.matchAll(/Domicilio:\s*([A-Za-z0-9ÁÉÍÓÚáéíóúñÑ\s\.\,\-\/\ºª°]+?)(?=\s+Condición de venta|\s+Código|\s+Producto|$)/gi)]
+                    .map(m => m[1].trim()).filter(x => x.length > 5);
+                if (doms.length >= 2) domicilio = doms[1];
+            }
+
+            const condicionVenta = T.includes("CUENTA CORRIENTE") ? "Cuenta Corriente" : "Otra";
+
+            const mPac = texto.match(/(?:AL NIÑO|AL NIÑA|PACIENTE|BENEFICIARIO|BENEFICIARIA):\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+?)(?=\s+DNI|\s+AFILIADO|\s+AF|\s+PERIODO|\s+VALOR|,|$)/i);
+            const nombre = mPac && mPac[1].trim().length > 2 ? mPac[1].trim() : "";
+
+            let desc = "";
+            const idx = texto.indexOf("Honorarios");
+            if (idx !== -1) {
+                desc = texto.substring(idx);
+                const cortes = [desc.search(/\d+[\.,]\d+\s+unidades/i), desc.search(/unidades/i), desc.indexOf("Subtotal")].filter(n => n !== -1);
+                if (cortes.length) desc = desc.substring(0, cortes[0]);
+            } else {
+                desc = `Honorarios Profesionales por la prestación de psicopedagogía al niño: ${nombre} PERIODO: [MES] [ANIO]`;
+            }
+            // Cualquier mes + año del texto pasa a ser el marcador.
+            desc = desc.replace(new RegExp(`(${MESES.join("|")}|SETIEMBRE)[\\s\\/\\-]*(?:DE\\s+)?20\\d{2}`, "gi"), "[MES] [ANIO]").replace(/\s+/g, " ").trim();
+
+            return { nombre, obraSocial: razon, cuit, iva, condicionVenta, domicilio, textoBase: desc };
+        }
+
+        el.pdf.addEventListener("change", async e => {
+            const archivo = e.target.files[0];
+            if (!archivo) return;
+            setEstado("Analizando comprobante PDF...");
+            try {
+                const pdf = await pdfjsLib.getDocument({ data: await archivo.arrayBuffer() }).promise;
+                let texto = "";
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const c = await (await pdf.getPage(i)).getTextContent();
+                    texto += c.items.map(x => x.str).join(" ") + " ";
+                }
+                const datos = extraerDatos(texto.replace(/\s+/g, " "), PERFILES[usuarioActual]);
+                setEstado("Factura leída. Revisá los datos y guardá.", "ok");
+                abrirModal(datos, null, "Revisá los datos del paciente", "Completamos lo que se pudo leer del PDF. Corregí o completá lo que falte, incluido el correo de destino.");
+            } catch (err) {
+                console.error("Error al leer el PDF:", err);
+                setEstado("Error al procesar el archivo PDF. Probá con otro documento.", "error");
+            } finally {
+                el.pdf.value = ""; // permite volver a subir el mismo archivo
+            }
+        });
+
+        /* ---------- COPIA DE SEGURIDAD ---------- */
+        el.exportar.addEventListener("click", () => {
+            const blob = new Blob([JSON.stringify({ pacientes }, null, 2)], { type: "application/json" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = `facturapp_${usuarioActual}_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        });
+
+        el.json.addEventListener("change", async e => {
+            const archivo = e.target.files[0];
+            if (!archivo) return;
+            try {
+                const data = JSON.parse(await archivo.text());
+                const lista = Array.isArray(data) ? data : data.pacientes;
+                if (!Array.isArray(lista)) throw new Error("formato");
+                let nuevos = 0;
+                lista.forEach(p => {
+                    if (!p || !p.nombre || !p.obraSocial || !p.textoBase) return;
+                    if (pacientes.some(x => x.nombre.toLowerCase() === p.nombre.toLowerCase() && x.obraSocial === p.obraSocial)) return;
+                    pacientes.push({
+                        nombre: p.nombre, obraSocial: p.obraSocial, cuit: p.cuit || "", iva: p.iva || "IVA Responsable Inscripto",
+                        condicionVenta: p.condicionVenta || "Otra", domicilio: p.domicilio || "", emailDestino: p.emailDestino || "", textoBase: p.textoBase
+                    });
+                    nuevos++;
+                });
+                guardar("pacientes_" + usuarioActual, pacientes);
+                cargarSelectPacientes();
+                setEstado(`Copia restaurada: ${nuevos} paciente(s) nuevo(s).`, "ok");
+            } catch {
+                setEstado("El archivo no tiene el formato esperado.", "error");
+            } finally {
+                el.json.value = "";
+            }
+        });
+
+        /* ---------- COPIAR Y CORREO ---------- */
+        el.copiar.addEventListener("click", () => {
+            navigator.clipboard.writeText(el.plantilla.textContent).then(() => {
+                el.copiado.classList.replace("opacity-0", "opacity-100");
+                setTimeout(() => el.copiado.classList.replace("opacity-100", "opacity-0"), 2000);
             });
+        });
+
+        el.correo.addEventListener("click", () => {
+            const i = el.selPac.value;
+            if (i === "") return;
+            const p = pacientes[i];
+            if (!p.emailDestino) {
+                abrirModal(p, Number(i), "Falta el correo de destino", "Cargá el correo de la obra social y guardá. Después volvé a tocar Redactar Correo.");
+                mc.email.focus();
+                return;
+            }
+            const asunto = `Factura ${el.selMes.value} ${el.selAnio.value} - ${p.nombre}`;
+            const cuerpo = `Buenos días,\n\nSe adjunta la factura correspondiente a:\n\n${el.plantilla.textContent}\n\nSaludos cordiales,\n${PERFILES[usuarioActual].nombre}`;
+            window.location.href = `mailto:${encodeURIComponent(p.emailDestino).replace(/%2C/g, ",").replace(/%20/g, "")}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
         });
     </script>
 </body>
